@@ -244,6 +244,7 @@ foo
 					<li>Scala has built in DI / AOP tooling in the shape of implicit / Typeclasses, that we can leverage here
 				</ul>
 				</section>
+				<section>
 					<h2>This pattern seems weird...</h2>
 				<ul>
 					<li>Not exactly, this same trick is used by plain vanilla Scala...
@@ -343,8 +344,31 @@ true
 						<li>You can get an implementation for your own type in Cats
 						<li>by implementing the right instance of Eq typeclass
 						<li>The rest will by done by syntax / ops
-						<li>Please note that the Eq typeclass is in another library, called algebra
+						<li>Please note that the Eq typeclass is in another library, called <a href="https://github.com/non/algebra">algebra</a>
+							which actually is implementing... well... algebra
 						<li>Cats is a really modular library
+  						<pre><code data-trim class="scala">
+import cats.syntax.eq._
+object Main extends App {
+
+  implicit val fooEqInstance: Eq[Foo] =
+    new Eq[Foo] {
+      def eqv(lhs: Foo, rhs: Foo): Boolean = lhs.s === rhs.s
+    }
+
+  println(foo === foo)
+}          					</code></pre>						
+  						<pre><code data-trim class="scala">
+true
+						</code></pre>						
+						</ul>
+				</section>
+				<section>    
+					<h2>=== for Foo in Scalaz</h2>
+					<ul>
+						<li>You can get an implementation for your own type in Scalaz
+						<li>This time you will implement an instance of TODO tutu XXX typeclass
+						<li>The rest, as usual, will by done by syntax / ops
   						<pre><code data-trim class="scala">
 import cats.syntax.eq._
 object Main extends App {
