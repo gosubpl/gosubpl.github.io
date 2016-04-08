@@ -85,7 +85,7 @@
 						<ul>
 							<li><a href="https://en.wikipedia.org/wiki/The_Timeless_Way_of_Building">The Timeless Way of Building</a> - "Quality without a name" and "Design pattern" (for architectural design)
 							<li><a href="https://en.wikipedia.org/wiki/A_Pattern_Language">A Pattern Language: Towns, Buildings, Construction</a> - set of 253 architecture patterns that are
-									<emph>stated in such a way that it gives the essential field of relationships needed to solve the problem, but in a very general and abstract way</emph>(pg xiii)
+									<cite>stated in such a way that it gives the essential field of relationships needed to solve the problem, but in a very general and abstract way</cite>(pg xiii)
 							<li>listing patterns like Local Town Hall (44) or Small Public Squares (61)
 						</ul>
 						<li> a
@@ -104,13 +104,122 @@
       				<section>
 					<h2>Show</h1>
 					<ul>
+						<li>adding .show to your types (cats)
+  						<pre><code data-trim class="scala">
+import cats.syntax.show._
+          					</code></pre>						
+					</ul>
+				</section>
+      				<section>
+					<h2>Show</h1>
+					<ul>
+						<li>showing a couple of things
+  						<pre><code data-trim class="scala">
+import cats.syntax.show._
+
+object Main extends App {
+
+	println("abc".show)
+
+	println(10.show)
+}
+          					</code></pre>						
+  						<pre><code data-trim class="scala">
+abc
+10						
+						</code></pre>						
+						</ul>
+				</section>
+      				<section>
+					<h2>Show</h1>
+					<ul>
+						<li>custom class will toString by default
+						<li>the result is not very meaningful
+						<pre><code data-trim class="scala">
+import cats.syntax.show._
+
+class Foo(val s: String) {}
+
+object Main extends App {
+	val foo: Foo = new Foo("foo")
+
+	println(foo)
+}
+          					</code></pre>						
+  						<pre><code data-trim class="scala">
+com.gft.scala.scalarconf.Foo@51d67073						
+						</code></pre>						
+						</ul>
+				</section>
+      				<section>
+					<h2>Show</h1>
+					<ul>
+						<li>custom class will not show by default
+						<li>this results in compile time error
+						<pre><code data-trim class="scala">
+import cats.syntax.show._
+
+class Foo(val s: String) {}
+
+object Main extends App {
+	val foo: Foo = new Foo("foo")
+
+	println(foo.show)
+}
+          					</code></pre>						
+  						<pre><code data-trim class="scala">
+ERROR: value show is not a member of com.gft.scala.scalarconf.Foo					
+						</code></pre>						
+						</ul>
+				</section>
+      				<section>
+					<h2>Show</h1>
+					<ul>
+						<li>we need to inject show into Foo using the Show typeclass
+						<li>then everything will work
+						<pre><code data-trim class="scala">
+import cats.syntax.show._
+
+class Foo(val s: String) {}
+
+object Main extends App {
+	val foo: Foo = new Foo("foo")
+
+	implicit val fooShow: Show[Foo] =
+ 	new Show[Foo] {
+      		def show(foo: Foo) = foo.s
+    	}
+
+
+	println(foo.show)
+}
+          					</code></pre>						
+  						<pre><code data-trim class="scala">
+foo
+						</code></pre>						
+						</ul>
+				</section>
+         				<section>
+					<h2>===</h1>
+					<ul>
+						<li>=== type aware check for equality
+						<li>will cause compile error when types don't match (comparison is impossible)
+						<li>
+  						<pre><code data-trim class="scala">
+import cats.syntax.eq._
+          					</code></pre>						
+					</ul>
+				</section>
+      				<section>
+					<h2>Show</h1>
+					<ul>
 						<li>adding .show to your types
   						<pre><code data-trim class="scala">
 import cats.syntax.show._
           					</code></pre>						
 					</ul>
 				</section>
-            <section>
+              <section>
           <h2>Thank you</h2>
           <h5>Useful links</h5>
           <ul>
