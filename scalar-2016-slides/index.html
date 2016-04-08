@@ -226,11 +226,13 @@ foo
 				</section>
 				<section>
 				<h2>Interldium: I have toString so why bother?
-				<li>We are moving some checks from run-time to compile time, there is less risk of unexpected fail on production
-				<li>We are using <em>type system<em> more extensively to assure our programs are correct
-				<li>We are reducing cognitive load on readers of the code - when they see usage of show, they can be sure that the result is intentional and well defined
-				<li>No surprises at run-time - if show is not defined, code will not compile
-				<li>Scala has built in DI / AOP tooling in the shape of implicit / Typeclasses, which we can leverage here
+				<ul>
+					<li>We are moving some checks from run-time to compile time, there is less risk of unexpected fail on production
+					<li>We are using <em>type system<em> more extensively to assure our programs are correct
+					<li>We are reducing cognitive load on readers of the code - when they see usage of show, they can be sure that the result is intentional and well defined
+					<li>No surprises at run-time - if show is not defined, code will not compile
+					<li>Scala has built in DI / AOP tooling in the shape of implicit / Typeclasses, which we can leverage here
+				</ul>
 				</section>
           			<section>
 					<h2>===</h1>
