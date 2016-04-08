@@ -77,7 +77,7 @@
 					<h2>Hmm... a town/city square ...</h2>
 				</section>
       				<section>
-					<h2>Design Patterns</21>
+					<h2>Design Patterns</h2>
 					<ul>
 						<li>Design Patterns are reusable abstractions
 						<li>Coming from architecture (of builings, cities, etc.), not IT
@@ -97,8 +97,7 @@
 					<h2>Some nice syntax</h2>
 					<ul>
 						<li>Show
-						<li> ===
-						<li> =!= (cats) / =/= (scalaz)
+						<li>Eq - === <em>and<em> =!= (cats) / =/= (scalaz)
 						<li>Reader
 					</ul>
 				</section>
@@ -224,17 +223,52 @@ foo
 						</code></pre>						
 					</ul>
 				</section>
-<!--				<section>
+				<section>
 				<h2>Interldium: I have toString so why bother?</h2>
 				<ul>
 					<li>We are moving some checks from run-time to compile time, there is less risk of unexpected fail on production
 					<li>We are using <em>type system<em> more extensively to assure our programs are correct
 					<li>We are reducing cognitive load on readers of the code - when they see usage of show, they can be sure that the result is intentional and well defined
 					<li>No surprises at run-time - if show is not defined, code will not compile
-					<li>Scala has built in DI / AOP tooling in the shape of implicit / Typeclasses, which we can leverage here
+					<li>Scala has built in DI / AOP tooling in the shape of implicit / Typeclasses, that we can leverage here
 				</ul>
 				</section>
           			<section>
+					<h2>Eq</h2>
+					<ul>
+						<li>=== / =!= type aware check for equality / inequality
+						<li>for cats include the import below
+  						<pre><code data-trim class="scala">
+import cats.syntax.eq._
+          					</code></pre>						
+					</ul>
+				</section>
+          			<section>
+					<h2>Eq</h2>
+					<ul>
+						<li>=== / =!= type aware check for equality / inequality
+						<li>for cats include the import below
+						<li>for Scalaz use =/= instead of =!=
+						<li>don't use /== as it has precedence issues
+  						<pre><code data-trim class="scala">
+import cats.syntax.eq._
+object Main extends App {
+
+  println("abc" === "cde")
+
+  println("abc" =!= "cde")
+
+  println(5 === 5)
+}
+          					</code></pre>						
+  						<pre><code data-trim class="scala">
+false
+true
+true
+						</code></pre>						
+						</ul>
+				</section>
+           			<section>
 					<h2>===</h2>
 					<ul>
 						<li>=== type aware check for equality
@@ -245,17 +279,7 @@ import cats.syntax.eq._
           					</code></pre>						
 					</ul>
 				</section>
-      				<section>
-					<h2>Show</h2>
-					<ul>
-						<li>adding .show to your types
-  						<pre><code data-trim class="scala">
-import cats.syntax.show._
-          					</code></pre>						
-					</ul>
-				</section>
-  
-				-->
+   
 	<section>
           <h2>Thank you</h2>
           <h5>Useful links</h5>
