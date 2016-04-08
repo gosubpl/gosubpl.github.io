@@ -94,9 +94,10 @@
 					</ul>
 				</section>
       				<section>
-					<h2>Some nice syntax</h2>
+					<h2>Some nice syntax extensions</h2>
 					<ul>
 						<li>Show
+						<li>Order
 						<li>Eq - === <em>and</em> =!= (cats) / =/= (scalaz)
 						<li>Reader
 					</ul>
@@ -224,13 +225,60 @@ foo
 					</ul>
 				</section>
 				<section>
-				<h2>Interldium: I have toString so why bother?</h2>
+				<h2>Interludium: what magic worked for Int and String?</h2>
+				<ul>
+					<li>You have obviously noted that neither Int nor String required this special magic of implementing an instance of a Show typeclass
+					<li>We are using <em>type system</em> more extensively to assure our programs are correct
+					<li>We are reducing cognitive load on readers of the code - when they see usage of show, they can be sure that the result is intentional and well defined
+					<li>No surprises at run-time - if show is not defined, code will not compile
+					<li>Scala has built in DI / AOP tooling in the shape of implicit / Typeclasses, that we can leverage here
+				</ul>
+				</section>
+				<section>
+				<h2>I have toString everywhere so why bother?</h2>
 				<ul>
 					<li>We are moving some checks from run-time to compile time, there is less risk of unexpected fail on production
 					<li>We are using <em>type system</em> more extensively to assure our programs are correct
 					<li>We are reducing cognitive load on readers of the code - when they see usage of show, they can be sure that the result is intentional and well defined
 					<li>No surprises at run-time - if show is not defined, code will not compile
 					<li>Scala has built in DI / AOP tooling in the shape of implicit / Typeclasses, that we can leverage here
+				</ul>
+				</section>
+					<h2>This pattern seems weird...</h2>
+				<ul>
+					<li>Not exactly, this same trick is used by plain vanilla Scala...
+					<li>... in both <a href="http://www.scala-lang.org/api/current/index.html#scala.math.Ordering">Ordering[T]</a>
+						and <a href="http://www.scala-lang.org/api/current/index.html#scala.math.Ordered">Ordered[T]</a> typeclasses
+					<li>to convert from Java's Comparator/Comparable interfaces... 
+					<li>And those two typeclasses have implicit conversions between them... cool!
+					<li>And this exact motivation is also present in Java's interfaces... but Java's syntax is more limited
+				</ul>
+				</section>
+				<section>
+				<h2>We can even go a bit further...</h2>
+				<ul>
+						<li>Now a cool thing Cats and Scalaz have in them is the Order typeclass
+						<li>With Cats compare operator returning Int (-1 for less, 0 for equal, 1 for greater)
+  						<pre><code data-trim class="scala">
+import cats.syntax.order._
+object Main extends App {
+	println(1.0 compare 2.0)
+}
+          					</code></pre>						
+  						<pre><code data-trim class="scala">
+-1
+          					</code></pre>
+					<li>And Scalaz ?|? operator returning Ordering.LT, Ordering.EQ or Ordering.GE
+  						<pre><code data-trim class="scala">
+import cats.syntax.order._
+object Main extends App {
+	println((1.0 ?|? 2.0).show)
+}
+          					</code></pre>						
+  						<pre><code data-trim class="scala">
+Ordering.LT
+          					</code></pre>
+			
 				</ul>
 				</section>
           			<section>
@@ -273,13 +321,47 @@ true
 					<ul>
 						<li>=== type aware check for equality
 						<li>will cause compile error when types don't match (comparison is impossible)
-						<li>
   						<pre><code data-trim class="scala">
 import cats.syntax.eq._
-          					</code></pre>						
-					</ul>
+object Main extends App {
+
+  implicit val fooEqInstance: Eq[Foo] =
+    new Eq[Foo] {
+      def eqv(lhs: Foo, rhs: Foo): Boolean = lhs.s === rhs.s
+    }
+
+  println(foo === foo)
+}          					</code></pre>						
+  						<pre><code data-trim class="scala">
+true
+						</code></pre>						
+						</ul>
 				</section>
-   
+           			<section>
+					<h2>=== for Foo in Cats</h2>
+					<ul>
+						<li>You can get an implementation for your own type in Cats
+						<li>by implementing the right instance of Eq typeclass
+						<li>The rest will by done by syntax / ops
+						<li>Please note that the Eq typeclass is in another library, called algebra
+						<li>Cats is a really modular library
+  						<pre><code data-trim class="scala">
+import cats.syntax.eq._
+object Main extends App {
+
+  implicit val fooEqInstance: Eq[Foo] =
+    new Eq[Foo] {
+      def eqv(lhs: Foo, rhs: Foo): Boolean = lhs.s === rhs.s
+    }
+
+  println(foo === foo)
+}          					</code></pre>						
+  						<pre><code data-trim class="scala">
+true
+						</code></pre>						
+						</ul>
+				</section>
+    
 	<section>
           <h2>Thank you</h2>
           <h5>Useful links</h5>
