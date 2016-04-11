@@ -63,7 +63,44 @@ object Zajecia04 extends App {
 						</code></pre>
 						</ul>
 				</section>
-			</div>
+           			<section>
+					<h2>Two mains</h2>
+					<ul>
+						<li>Sbt will ask you politely, which of them you want to run
+  						<pre><code data-trim class="scala">
+Multiple main classes detected, select one to run:
+
+ [1] pl.p.lodz.bootstrap.Main
+ [2] pl.p.lodz.bootstrap.Zajecia04
+^JEnter number: 2
+
+[info] Running pl.p.lodz.bootstrap.Zajecia04 
+
+a b c
+						</code></pre>
+						</ul>
+				</section>
+           			<section>
+					<h2>looping in Scala with while</h2>
+					<ul>
+						<li>Simplest looping construct in scala is while
+						<li>This is equivalent to while, while-do, do-while and for (...) constructs in other languages
+						<li>It is an imperative concept and works best with vars (mutable variables)
+  						<pre><code data-trim class="scala">
+  def show_args(args: Array[String]): Unit = {
+    var i = 0
+    while (i &lt; args.length) {
+      if (i != 0)
+        print(" ")
+      print(args(i))
+      i += 1
+    }
+    println()
+  }						
+						</code></pre>
+						</ul>
+				</section>
+					</div>
 
 		</div>
 
