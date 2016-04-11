@@ -130,17 +130,67 @@ b
 					<ul>
 						<li>To do away with the boilerplate (unnecessary typing) you can use <em>lambda functions</em> - unnamed
 							functions defined in the place of usage
-						<li>Scala offers convenient features of ommiting certain syntax elements, four lines below are equivalent
+						<li>Scala offers convenient features of ommiting certain syntax elements, five lines below are equivalent
 						<li>No "hard" rules, needs practice to get used to this
   						<pre><code data-trim class="scala">
-    args.foreach(arg =&gt; println(arg))
-    args.foreach(println(_))
-    args.foreach(println _)
-    args.foreach(println)
+args.foreach(arg =&gt; println(arg))
+args.foreach(println(_))
+args.foreach(println _)
+args.foreach(println)
+args foreach println
 						</code></pre>
 							</ul>
 				</section>
-							</div>
+				<section>
+					<h2>"for" foreach loops</h2>
+					<ul>
+						<li>There is one more syntax worth mentioning, the "for" one
+						<li>Here arg is an element of collection args
+  						<pre><code data-trim class="scala">
+for (arg &lt;- args)
+  println(arg)
+						</code></pre>
+							</ul>
+				</section>
+				<section>
+					<h2>useful syntax helpers</h2>
+					<ul>
+						<li>In Scala everything is an object, and thus it has methods
+						<li>Int too! So one can use nice helpers, e.g. to create ranges for use in for loops
+						<li>Two loops below are equivalent
+  						<pre><code data-trim class="scala">
+    for (i &lt;- 1 to 3)
+      println(i)
+
+    for (i &lt;- 1.to(3))
+      println(i)			     
+						</code></pre>
+							</ul>
+				</section>
+					<h2>Experiment with lists!</h2>
+					<ul>
+						<li>Go to <a href="http://www.scala-lang.org/api/2.11.8/#scala.collection.immutable.List">scala.collection.immutable.List</a>
+							and try experimenting
+						<li>In particular, research the following methods
+  						<pre><code data-trim class="scala">
+++
++:
+:+
+::
+:::
+contains
+distinct
+drop
+head
+last
+count
+exists
+filter
+forAll
+						</code></pre>
+							</ul>
+				</section>
+										</div>
 
 		</div>
 
