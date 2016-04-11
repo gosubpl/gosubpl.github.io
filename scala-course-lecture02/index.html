@@ -87,7 +87,7 @@ a b c
 						<li>This is equivalent to while, while-do, do-while and for (...) constructs in other languages
 						<li>It is an imperative concept and works best with vars (mutable variables)
   						<pre><code data-trim class="scala">
-  def show_args(args: Array[String]): Unit = {
+def show_args(args: Array[String]): Unit = {
     var i = 0
     while (i &lt; args.length) {
       if (i != 0)
@@ -96,11 +96,37 @@ a b c
       i += 1
     }
     println()
-  }						
+}						
 						</code></pre>
 						</ul>
 				</section>
-					</div>
+					<h2>Functional "looping"</h2>
+					<ul>
+						<li>Instead of running a loop
+						<li>You can execute a function <em>for each</em>element of the collection
+						<li>(more advanced) consider that the collection could be generated "on-the-fly" - this is called "Reactive programming"
+						<li>To do this, define a printing function and pass it to the foreach function
+  						<pre><code data-trim class="scala">
+  def print_arg(arg: String): Unit = {
+    println(arg)
+  }
+
+  def print_args(args: Array[String]): Unit = {
+    args.foreach(print_arg)
+  }
+						</code></pre>
+  						<pre><code data-trim class="scala">
+  z04.print_args(Array("a", "b"))
+						</code></pre>
+  						<pre><code data-trim class="scala">
+[info] Running pl.p.lodz.bootstrap.Zajecia04 
+
+a
+b						
+						</code></pre>
+							</ul>
+				</section>
+						</div>
 
 		</div>
 
