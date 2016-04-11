@@ -103,9 +103,7 @@ def show_args(args: Array[String]): Unit = {
 				<section>
 					<h2>Functional "looping"</h2>
 					<ul>
-						<li>Instead of running a loop
-						<li>You can execute a function <em>for each</em>element of the collection
-						<li>(more advanced) consider that the collection could be generated "on-the-fly" - this is called "Reactive programming"
+						<li>Instead of running a loop you can execute a function <em>for each</em> element of the collection
 						<li>To do this, define a printing function and pass it to the foreach function
   						<pre><code data-trim class="scala">
   def print_arg(arg: String): Unit = {
@@ -127,7 +125,21 @@ b
 						</code></pre>
 							</ul>
 				</section>
-						</div>
+					<h2>Lambda functions</h2>
+					<ul>
+						<li>To do away with the boilerplate (unnecessary typing) you can use <em>lambda functions</em> - unnamed
+							functions defined in the place of usage
+						<li>Scala offers convenient features of ommiting certain syntax elements, four lines below are equivalent
+						<li>No "hard" rules, needs practice to get used to this
+  						<pre><code data-trim class="scala">
+    args.foreach(arg =&gt; println(arg))
+    args.foreach(println(_))
+    args.foreach(println _)
+    args.foreach(println)
+						</code></pre>
+							</ul>
+				</section>
+							</div>
 
 		</div>
 
