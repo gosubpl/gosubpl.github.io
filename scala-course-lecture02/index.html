@@ -42,34 +42,25 @@
 			<div class="slides">
 				<section>
 					<h1>Programming in Scala</h1>
-					<h3>Lectre 02</h3>
+					<h3>Lecture 04</h3>
 					<p>
-						<small>Jan Pustelnik</small>
+						<small>Marcin Kowalski / Jan Pustelnik</small>
 					</p>
 				</section>
            			<section>
-					<h2>=== for Foo in Cats</h2>
+					<h2>Zajecia04.scala</h2>
 					<ul>
-						<li>You can get an implementation for your own type in Cats
-						<li>by implementing the right instance of Eq typeclass
-						<li>The rest will by done by syntax / ops
-						<li>Please note that the Eq typeclass is in another library, called <a href="https://github.com/non/algebra">algebra</a>
-							which actually is implementing... well... algebra
-						<li>Cats is a really modular library
+						<li>You can define more than one main in a file
   						<pre><code data-trim class="scala">
-import cats.syntax.eq._
-object Main extends App {
+object Zajecia04 extends App {
+  override def main(args: Array[String]): Unit = {
+    val z04 = new Zajecia04()
+    z04.show_args(args)
 
-  implicit val fooEqInstance: Eq[Foo] =
-    new Eq[Foo] {
-      def eqv(lhs: Foo, rhs: Foo): Boolean = lhs.s === rhs.s
-    }
-
-  println(foo === foo)
-}          					</code></pre>						
-  						<pre><code data-trim class="scala">
-true
-						</code></pre>						
+    z04.show_args(Array("a", "b", "c"))
+  }
+}
+						</code></pre>
 						</ul>
 				</section>
 			</div>
