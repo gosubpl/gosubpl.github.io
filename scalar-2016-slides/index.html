@@ -436,8 +436,35 @@ true
 						<li>Lizniecie Traverse / Sequence
 					</ul>
 				</section>
-    
-	<section>
+           			<section>
+					<h2>Context and Functor</h2>
+					<ul>
+						<li>Imagine you would like to separate functions that operate on certain types (like f : A =&gt; B)
+							from the computational context (environment) in which those functions are defined
+						<li>Example could be a transformation of numbers into other numbers that you would like to unit test using scalacheck
+						<li>But run in distributed environment
+						<li>So for unit testing your function might be running in a context of a simple list (transforming lists of numbers
+							into lists of numbers)
+						<li>but for real execution you would use Stream or Future[List] or List[Future] some other fancy Reactive thingy or 
+							modern Big-Data stuff - Spark RDD 
+						<li>For obvious reasons, e.g. performance and simplicity you would like to avoid having to set up a complex environment for tests
+						<li>Plus you get for free the re-usability of the function code, so much coveted in the OO world
+						<li>Actually the OO GOF book fans should recognise here the Command pattern
+						<li>enhanced with the Function Object pattern approach
+						</ul>
+				</section>
+          			<section>
+					<h2>The map function</h2>
+						<p>The interface that satisfies the requirements stated above is the one of the <em>map</em> function</p>
+  						<pre><code data-trim class="scala">
+def map[A, B](f: A =&gt; B): F[B]
+						</code></pre>
+						<p>Every generic collection F that can be parametrised with types A and B as F[A] and F[B]
+						supplied with map function that operates on F[A], takes functions going from A to B and returns
+						F[B] will work, as long as the map function does what we are used to, namely applies f to each
+						element of F[A] and builds F[B] from results of this application
+				</section>
+			<section>
           <h2>Thank you</h2>
           <h5>Useful links</h5>
           <ul>
