@@ -451,6 +451,7 @@ true
 						<li>Plus you get for free the re-usability of the function code, so much coveted in the OO world
 						<li>Actually the OO GOF book fans should recognise here the Command pattern
 						<li>enhanced with the Function Object pattern approach
+						<li>and a bit of an Iterator pattern
 						</ul>
 				</section>
           			<section>
@@ -463,6 +464,42 @@ def map[A, B](f: A =&gt; B): F[B]
 						supplied with map function that operates on F[A], takes functions going from A to B and returns
 						F[B] will work, as long as the map function does what we are used to, namely applies f to each
 						element of F[A] and builds F[B] from results of this application
+				</section>
+          			<section>
+					<h2>The map function</h2>
+					<ul>
+						<li>In Scala standard library there is a suitable <em>map</em> construct defined for <em>TraversableLike</em> trait,
+							which sits near the root of inheritance tree of Scala Collections library
+  						<pre><code data-trim class="scala">
+ def map[B, That](f: A =&gt; B)(implicit bf: CanBuildFrom[Repr, B, That]): That = {
+    def builder = { // extracted to keep method size under 35 bytes, so that it can be JIT-inlined
+      val b = bf(repr)
+      b.sizeHint(this)
+      b
+    }
+    val b = builder
+    for (x &lt;- this) b += f(x)
+    b.result
+  }
+						</code></pre>
+						<li>But to actually use this for our custom type, we would have to overcome a couple of obstacles
+							<ul>
+								<li>inherit from <em>TraversableLike</em>
+								<li>implement suitable <em>CanBuildFrom</em> for builder
+								<li>think about what is necessary to implement all remaining methods of <em>TraversableLike</em>
+							</ul>	
+					</ul>
+				</section>
+            			<section>
+					<h2>Factoring out / abstraction</h2>
+					So we now have a couple of simple questions
+					<ul>
+						<li>Can we treat this Context / map thing as a pattern
+						<li>Can we factor out only the part connected with the <em>map</em> function
+						<li>Can we in abstract way define requirements, laws that this construct should obey to satisfy the
+							"map applies f to each element of F[A] and builds F[B]" without "emulating" the definition
+							using builder, as is the case with <em>TraversableLike.map</em>?
+					</ul>
 				</section>
 			<section>
           <h2>Thank you</h2>
