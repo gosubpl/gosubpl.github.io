@@ -501,7 +501,26 @@ def map[A, B](f: A =&gt; B): F[B]
 							using builder, as is the case with <em>TraversableLike.map</em>?
 					</ul>
 				</section>
-			<section>
+          			<section>
+					<h2>Functor</h2>
+					<ul>
+						<li>Cats and Scalaz introduce the Functor pattern
+						<li>Everything that has <em>map</em> can be converted to Functor
+						<li>Relevant implicit convertion needs to be introduced
+  						<pre><code data-trim class="scala">
+implicit val optionFunctor: Functor[Option] = new Functor[Option] {
+  def map[A,B](fa: Option[A])(f: A =&gt; B) = fa map f
+}
+
+implicit val listFunctor: Functor[List] = new Functor[List] {
+  def map[A,B](fa: List[A])(f: A =&gt; B) = fa map f
+}
+						</code></pre>
+						<li>In Cats it is done for the Option type in OptionOps
+						<li>In Scalaz - TODO
+					</ul>
+				</section>
+ 	<section>
           <h2>Thank you</h2>
           <h5>Useful links</h5>
           <ul>
