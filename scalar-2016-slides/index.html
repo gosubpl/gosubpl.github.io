@@ -508,19 +508,60 @@ def map[A, B](f: A =&gt; B): F[B]
 						<li>Everything that has <em>map</em> can be converted to Functor
 						<li>Relevant implicit convertion needs to be introduced
   						<pre><code data-trim class="scala">
-implicit val optionFunctor: Functor[Option] = new Functor[Option] {
+implicit val optionFunctor: Functor[Option] = 
+new Functor[Option] {
   def map[A,B](fa: Option[A])(f: A =&gt; B) = fa map f
 }
 
-implicit val listFunctor: Functor[List] = new Functor[List] {
+implicit val listFunctor: Functor[List] =
+new Functor[List] {
   def map[A,B](fa: List[A])(f: A =&gt; B) = fa map f
 }
 						</code></pre>
 						<li>In Cats it is done for the Option type in OptionOps
 						<li>In Scalaz - TODO
+						<li>You need the conversion to be in the scope, will not happen by itself
 					</ul>
 				</section>
- 	<section>
+          			<section>
+					<h2>Functor laws</h2>
+					<ul>
+						<li>Functors are very common
+						<li>But not all collections are functors
+						<li>Functor needs to obey FunctorLaws (e.g. cats.laws.FunctorLaws)
+  						<pre><code data-trim class="scala">
+  def covariantIdentity[A](fa: F[A]): IsEq[F[A]] =
+    fa.map(identity) <-> fa
+
+  def covariantComposition[A, B, C]
+      (fa: F[A], f: A =&gt; B, g: B =&gt; C): IsEq[F[C]] =
+    fa.map(f).map(g) <-> fa.map(f andThen g)						
+						</code></pre>
+						<li>e.g. Set is not a true functor (scalaz.outlaws.std.set._)
+						<li>We call them lawless or outlaws
+						<li>Nonetheless you can use for syntax benefit only if careful
+					</ul>
+				</section>
+				<section>
+					<h2>Using Functors</h2>
+					<ul>
+						<li>You can now separate function from the context
+						<li>And test your function separately from usage
+  						<pre><code data-trim class="scala">
+def transformWithFunc[F[_], A, B](a: F[A], fa: A =&gt; B)
+	(implicit F: Functor[F]) = F.map(a)(fa)
+
+def twice(x: Int) = 2 * x
+
+println(transformWithFunc(List(1, 2, 3), twice))
+
+println(transformWithFunc(1.some, twice))
+
+						</code></pre>
+					</ul>
+				</section>
+
+  	<section>
           <h2>Thank you</h2>
           <h5>Useful links</h5>
           <ul>
