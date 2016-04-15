@@ -581,6 +581,9 @@ val odx = od.map(_ + _)
 println(odx)
 
 						</code></pre>
+  						<pre><code data-trim class="scala">
+Some(8)
+						</code></pre>
 					</ul>
 				</section>
 				<section>
@@ -595,7 +598,10 @@ val oex = od.map(_ + _)
 println(oex)
 
 						</code></pre>
-					</ul>
+  						<pre><code data-trim class="scala">
+Some(8)
+						</code></pre>
+						</ul>
 				</section>
 				<section>
 					<h2>Composing Functors</h2>
@@ -609,7 +615,10 @@ val oex = od.map(_ + _)
 println(oex)
 
 						</code></pre>
-					</ul>
+  						<pre><code data-trim class="scala">
+List(8)
+						</code></pre>
+						</ul>
 				</section>
 					<section>
 					<h2>Applicative Functor</h2>
@@ -629,8 +638,124 @@ List(1)
 						</code></pre>
 					</ul>
 				</section>
+				<section>
+				<h2>Using Applicatives</h2>
+					<ul>
+						<li>Notice the catz.* import
+						<li>Cats 0.4.1 does not contain applicatives yet, had to copy by hand from git repository
+						<li>This code works for Scalaz when you replace the import with general Scalaz imports
+  						<pre><code data-trim class="scala">
+import catz.syntax.applicative._
 
+def sequenceA[F[_]: Applicative, A](list: List[F[A]]): F[List[A]] = list match {
+    case Nil =&gt; (Nil: List[A]).pure[F]
+    case x :: xs =&gt; (x |@| sequenceA(xs)).map { _ :: _ }
+}
 
+						</code></pre>
+						</ul>
+				</section>
+				<section>
+				<h2>Using Applicatives</h2>
+					<ul>
+						<li>Notice what happens when None is encountered
+						<li>Also, commented out line will not compile
+  						<pre><code data-trim class="scala">
+println(sequenceA(List(1.some, 2.some, 3.some)))
+
+println(sequenceA(List(1.some, none[Int], 2.some)))
+
+println(sequenceA(List(1.some, "a".some)))
+
+//println(sequenceA(List(1.some, List(2))))
+
+						</code></pre>
+  						<pre><code data-trim class="scala">
+Some(List(1, 2, 3))
+None
+Some(List(1, a))
+						</code></pre>
+						</ul>
+				</section>
+				<section>
+				<h2>Why None?</h2>
+					<ul>
+						<li>Think about the addiion example
+  						<pre><code data-trim class="scala">
+val on = 1.some |@| none[Int]
+
+println(on.map(_ + _))
+						</code></pre>
+						<li>You cannot add an empty value...
+  						<pre><code data-trim class="scala">
+None
+						</code></pre>
+						<li>This makes sense...
+						</ul>
+				</section>
+				<section>
+				<h2>Applicatives Pattern - Configuration</h2>
+					<ul>
+						<li>Here comes first nice usage of applicatives
+						<li>Reading a config file
+  						<pre><code data-trim class="scala">
+  val propsStringGood=List("db.user=gosubpl", "db.pass=pass", "db.name=dbase1")
+  val propsStringBad = List("db.user=gosubpl", "db.pass=pass")
+
+  println(propsStringGood.find(_.startsWith("db.user=")).map(_.replace("db.user=", "")))
+  println(propsStringBad.find(_.startsWith("db.name=")).map(_.replace("db.name=", "")))
+						</code></pre>
+  						<pre><code data-trim class="scala">
+Some(gosubpl)
+None
+						</code></pre>
+						</ul>
+				</section>
+				<section>
+				<h2>Applicatives Pattern - Configuration</h2>
+					<ul>
+						<li>So why not...
+  						<pre><code data-trim class="scala">
+def readProperty(prop: String)(props: List[String]): Option[String] =
+	props.find(_.startsWith(prop + "=")).map(_.replace(prop + "=", ""))
+
+val dbUser = readProperty("db.user") _
+val dbName = readProperty("db.name") _
+val dbPass = readProperty("db.pass") _
+
+def dbProps(config: List[String]) = (dbUser(config) |@| dbName(config) |@| dbPass(config))
+						</code></pre>
+						</ul>
+				</section>
+				<section>
+				<h2>Applicatives Pattern - Configuration</h2>
+					<ul>
+						<li>And let's extract the configs
+  						<pre><code data-trim class="scala">
+println(dbProps(propsStringGood).map(_ + " " + _ + " " + _))
+println(dbProps(propsStringBad).map(_ + " " + _ + " " + _))						
+						</code></pre>
+  						<pre><code data-trim class="scala">
+Some(gosubpl dbase1 pass)
+None
+						</code></pre>
+						</ul>
+				</section>
+				<section>
+				<h2>Applicatives Pattern - Configuration</h2>
+					<ul>
+						<li>Or in a simpler way with sequenceA
+  						<pre><code data-trim class="scala">
+def applyProps(f : Function1[List[String], Option[String]], s: List[String]) = f(s)
+
+println(sequenceA(List(dbUser, dbName, dbPass).map(applyProps(_, propsStringGood))))
+						</code></pre>
+  						<pre><code data-trim class="scala">
+Some(List(gosubpl, dbase1, pass))
+						</code></pre>
+						</ul>
+				</section>
+						
   	<section>
           <h2>Thank you</h2>
           <h5>Useful links</h5>
