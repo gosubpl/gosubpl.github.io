@@ -68,7 +68,7 @@
 						<li>Right abstractions allow to adapt to changing environment easily
 						<li>The code is dense and meaningful
 						<li>Scala blends seamlessly various paradigms - OO, FP, AOP
-						<li>Scala has "Quality without a name" (you know it when you see it)
+						<li>Scala has this "Quality without a name" (you know it when you see it)
 					</ul>
 				</section>
       				<section>
@@ -77,24 +77,26 @@
 						<li>Dynamic ecosystem, tools change rapidly (e.g. SI-2712)
 						<li>Libraries change (Slick 2 to Slick 3, Scalaz &amp; Cats)
 						<li>Right abstractions, so easy in Scala, help (withTransaction taking a code block, tuned to your needs)
-						<li>Scala is a tool for professionals
 					</ul>
 				</section>
       				<section>
 					<h2>Carpenter toolbox photo</h2>
 					<ul>
-						<li>TODO get something from somewhere Creative Commons - a bit of a problem...
+						<li>By Aerolin55 - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=8266918
 					</ul>
 				</section>
        				<section>
-					<h2>Stroustrup quote</h2>
+					<h2>Are you serious?</h2>
 					<ul>
 						<li><a href="https://en.wikipedia.org/wiki/Dunning%E2%80%93Kruger_effect">Dunning-Kruger effect</a>
-						<li>TODO The Stroustrup quote on carpenter TODO
+						<li>Scala is a tool for professionals
 					</ul>
 				</section>
         				<section>
 					<h2>Now a quiz... what is this...</h2>
+					<li>By Arian Zwegers (Warsaw, Old Town Square) [CC BY 2.0 (http://creativecommons.org/licenses/by/2.0)], via Wikimedia Commons
+					<li>By Giramondo1 (Freudenstadt Town Square) [CC BY-SA 2.0 (http://creativecommons.org/licenses/by-sa/2.0)], via Wikimedia Commons
+					<li>By FruitMonkey Description=Llanharan Town Square, from Bridgend Road facing North. CC BY-SA 3.0 
 					<br/>
 					<br/>
 					<h2>Hmm... a town/city square ...</h2>
@@ -266,7 +268,7 @@ foo
 						<li>Instances (use OptionInstances - to show Show)
 						<li><a href="http://typelevel.org/cats/typeclasses.html">Cats manual on Typeclasses</a>
 						<li>ScalaDoc a bit useless, as lots of methods for technical things, internals
-						<li>Mechanics in Scalaz similar
+						<li>Mechanics in Scalaz similar (keywords to look for Instances, Ops, Syntax)
 					</ul>
 				</section>
 				<section>
@@ -420,22 +422,6 @@ true
 						</code></pre>						
 						</ul>
 				</section>
-				<section>
-					<h2>Implementations of Eq for regular types</h2>
-					<ul>
-						<li>Here
-						<li>There
-						<li>And everywhere
-					</ul>
-				</section>
-  				<section>
-					<h2>TODO dalej</h2>
-					<ul>
-						<li>Functor, |@|, Applicative - sequenceA
-						<li>Xor, Validated / \/, Validation
-						<li>Lizniecie Traverse / Sequence
-					</ul>
-				</section>
            			<section>
 					<h2>Context and Functor</h2>
 					<ul>
@@ -472,7 +458,7 @@ def map[A, B](f: A =&gt; B): F[B]
 							which sits near the root of inheritance tree of Scala Collections library
   						<pre><code data-trim class="scala">
  def map[B, That](f: A =&gt; B)(implicit bf: CanBuildFrom[Repr, B, That]): That = {
-    def builder = { // extracted to keep method size under 35 bytes, so that it can be JIT-inlined
+    def builder = { 
       val b = bf(repr)
       b.sizeHint(this)
       b
@@ -519,7 +505,7 @@ new Functor[List] {
 }
 						</code></pre>
 						<li>In Cats it is done for the Option type in OptionOps
-						<li>In Scalaz - TODO
+						<li>In Scalaz - OptionSyntax (Ops &amp; Syntax seem to have inverted meanings)
 						<li>You need the conversion to be in the scope, will not happen by itself
 					</ul>
 				</section>
@@ -606,7 +592,8 @@ Some(8)
 				<section>
 					<h2>Composing Functors</h2>
 					<ul>
-						<li>Or Applicative Builder (Scalaz)
+						<li>Apply in Scalaz
+						<li>|@| is called here ApplicativeBuilder
   						<pre><code data-trim class="scala">
 import cats.syntax.cartesian._
 
@@ -755,8 +742,19 @@ Some(List(gosubpl, dbase1, pass))
 						</code></pre>
 						</ul>
 				</section>
-						
-  	<section>
+  				<section>
+				<h2>Validated</h2>
+					<ul>
+						<li>And if I wanted to know which part of the config failed?
+  						<pre><code data-trim class="scala">
+
+						</code></pre>
+  						<pre><code data-trim class="scala">
+Some(List(gosubpl, dbase1, pass))
+						</code></pre>
+						</ul>
+				</section>
+	<section>
           <h2>Thank you</h2>
           <h5>Useful links</h5>
           <ul>
