@@ -165,20 +165,20 @@
       				<section>
 					<h2>Scalaz imports</h2>
 					<ul>
-						<li>Scalaz is not modular, just do this
-  						<pre><code data-trim class="scala">
+						<li class="fragment">Scalaz is not modular, just do this
+  						<pre class="fragment"><code data-trim class="scala">
 import scalaz._
 import Scalaz._
 						</code></pre>
-						<li>No need to import anything else
-						<li>Can cause name clashes and general slowness (implicits!)
+						<li class="fragment">No need to import anything else
+						<li class="fragment">Can cause name clashes and general slowness (implicits!)
 					</ul>
 				</section>
        				<section>
-					<h2>Show</h2>
+					<h2>Show - Cats imports</h2>
 					<ul>
-						<li>adding .show to your types (cats)
-  						<pre><code data-trim class="scala">
+						<li>adding .show to your types (Cats)
+  						<pre class="fragment"><code data-trim class="scala">
 import cats.syntax.show._
           					</code></pre>						
 					</ul>
@@ -186,8 +186,9 @@ import cats.syntax.show._
       				<section>
 					<h2>Show</h2>
 					<ul>
-						<li>showing a couple of things
-  						<pre><code data-trim class="scala">
+						<li class="fragment">showing a couple of things
+						<li class="fragment">same code for Cats and Scalaz, modulo the import
+  						<pre class="fragment"><code data-trim class="scala">
 import cats.syntax.show._
 
 object Main extends App {
@@ -206,9 +207,9 @@ abc
       				<section>
 					<h2>Show</h2>
 					<ul>
-						<li>custom class will toString by default
-						<li>the result is not very meaningful
-						<pre><code data-trim class="scala">
+						<li class="fragment">custom class will toString by default
+						<li class="fragment">the result is not very meaningful
+						<pre class="fragment"><code data-trim class="scala">
 import cats.syntax.show._
 
 class Foo(val s: String) {}
@@ -219,7 +220,7 @@ object Main extends App {
 	println(foo)
 }
           					</code></pre>						
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
 com.gft.scala.scalarconf.Foo@51d67073						
 						</code></pre>						
 						</ul>
@@ -227,9 +228,9 @@ com.gft.scala.scalarconf.Foo@51d67073
       				<section>
 					<h2>Show</h2>
 					<ul>
-						<li>custom class will not show by default
-						<li>this results in compile time error
-						<pre><code data-trim class="scala">
+						<li class="fragment">custom class will not Show by default
+						<li class="fragment">this results in compile time error
+						<pre class="fragment"><code data-trim class="scala">
 import cats.syntax.show._
 
 class Foo(val s: String) {}
@@ -240,18 +241,18 @@ object Main extends App {
 	println(foo.show)
 }
           					</code></pre>						
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
 ERROR: value show is not a member of
 	com.gft.scala.scalarconf.Foo					
 						</code></pre>					
 					</ul>
 				</section>
       				<section>
-					<h2>Show</h2>
+					<h2>Show - instance</h2>
 					<ul>
-						<li>we need to inject show into Foo using the Show typeclass
-						<li>then everything will work
-						<pre><code data-trim class="scala">
+						<li class="fragment">we need to inject show into Foo using the Show typeclass
+						<li class="fragment">in other words - create an instance of this typeclass for a given type
+						<pre class="fragment"><code data-trim class="scala">
 import cats.syntax.show._
 
 class Foo(val s: String) {}
@@ -267,16 +268,17 @@ object Main extends App {
 	println(foo.show)
 }
           					</code></pre>						
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
 foo
 						</code></pre>						
+						<li class="fragment">same code for Scalaz, minus the import
 					</ul>
 				</section>
       				<section>
 					<h2>Show</h2>
 					<ul>
-						<li>if we have a toString defined in Foo, we can use it with Show
-						<pre><code data-trim class="scala">
+						<li class="fragment">if we have a toString defined in Foo, we can use it with Show
+						<pre class="fragment"><code data-trim class="scala">
 import cats.syntax.show._
 
 class Foo(val s: String) {
@@ -292,12 +294,37 @@ object Main extends App {
 	println(foo.show)
 }
           					</code></pre>						
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
+foo
+						</code></pre>						
+						<li class="fragment">this code is Cats specific
+					</ul>
+				</section>
+      				<section>
+					<h2>Show</h2>
+					<ul>
+						<li class="fragment">but Scalaz version needs only a minor tweak
+						<li class="fragment">notice <b>two</b>small minor differences
+						<pre class="fragment"><code data-trim class="scala">
+class Foo(val s: String) {
+  override def toString = s
+}
+
+object Main extends App {
+	val foo: Foo = new Foo("foo")
+
+  	implicit val fooFromToStringShow: Show[Foo] =
+    		Show.showFromToString[Foo]
+  
+	println(foo.show)
+}
+          					</code></pre>						
+  						<pre class="fragment"><code data-trim class="scala">
 foo
 						</code></pre>						
 					</ul>
 				</section>
-				<section>
+					<section>
 				<h2>Interludium: what magic worked for Int and String?</h2>
 				<ul>
 					<li>You have obviously noted that neither Int nor String required this special magic of implementing an instance of a Show typeclass
