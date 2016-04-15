@@ -555,11 +555,81 @@ def twice(x: Int) = 2 * x
 
 println(transformWithFunc(List(1, 2, 3), twice))
 
+List(2, 4, 6)
+
 println(transformWithFunc(1.some, twice))
+
+Some(2)
 
 						</code></pre>
 					</ul>
 				</section>
+				<section>
+					<h2>Composing Functors</h2>
+					<ul>
+						<li>Neat trick about Functors is that you can compose them with |@|
+							the <em>Scream</em> operator
+						<li>This is Cats code
+  						<pre><code data-trim class="scala">
+import cats.syntax.cartesian._
+
+val oa: Option[Int] = Some(3)
+val ob: Option[Int] = Some(5)
+
+val od = oa |@| ob
+val odx = od.map(_ + _)
+println(odx)
+
+						</code></pre>
+					</ul>
+				</section>
+				<section>
+					<h2>Composing Functors</h2>
+					<ul>
+						<li>This operator is called a Cartesian (Cats)
+  						<pre><code data-trim class="scala">
+import cats.syntax.cartesian._
+
+val oe = 3.some |@| 5.some
+val oex = od.map(_ + _)
+println(oex)
+
+						</code></pre>
+					</ul>
+				</section>
+				<section>
+					<h2>Composing Functors</h2>
+					<ul>
+						<li>Or Applicative Builder (Scalaz)
+  						<pre><code data-trim class="scala">
+import cats.syntax.cartesian._
+
+val oe = 3.some |@| 5.some
+val oex = od.map(_ + _)
+println(oex)
+
+						</code></pre>
+					</ul>
+				</section>
+					<section>
+					<h2>Applicative Functor</h2>
+					<ul>
+						<li>Applicative Functor is a Functor that has a constructor
+						<li>This constructor is called <em>pure</em> (or sometimes <em>point</em>)
+  						<pre><code data-trim class="scala">
+def pure[A](x: A): F[A]
+
+Applicative[Option].pure(1)
+
+Some(1)
+
+Applicative[List].pure(1)
+
+List(1)
+						</code></pre>
+					</ul>
+				</section>
+
 
   	<section>
           <h2>Thank you</h2>
