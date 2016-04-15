@@ -158,9 +158,9 @@
 					<p class="fragment">We will approach Cats and Scalaz from the Patterns angle, starting with some nice syntax extensions</p>
 					<ul class="fragment">
 						<li>Show
-						<li>Order
 						<li>Eq - === <em>and</em> =!= (cats) / =/= (scalaz)
 					</ul>
+					<p class="fragment">There are more nice syntax helpers, e.g. Order, please check the documentation!</p>
 				</section>
       				<section>
 					<h2>Scalaz imports</h2>
@@ -177,7 +177,8 @@ import Scalaz._
        				<section>
 					<h2>Show - Cats imports</h2>
 					<ul>
-						<li>adding .show to your types (Cats)
+						<li class="fragment">Cats is a modular libary
+						<li class="fragment">need this import to add .show to standard types (Cats)
   						<pre class="fragment"><code data-trim class="scala">
 import cats.syntax.show._
           					</code></pre>						
@@ -198,7 +199,7 @@ object Main extends App {
 	println(10.show)
 }
           					</code></pre>						
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
 abc
 10						
 						</code></pre>						
@@ -304,19 +305,19 @@ foo
 					<h2>Show</h2>
 					<ul>
 						<li class="fragment">but Scalaz version needs only a minor tweak
-						<li class="fragment">notice <b>two</b>small minor differences
+						<li class="fragment">notice <b>two</b> minor differences
 						<pre class="fragment"><code data-trim class="scala">
 class Foo(val s: String) {
   override def toString = s
 }
 
 object Main extends App {
-	val foo: Foo = new Foo("foo")
+  val foo: Foo = new Foo("foo")
 
-  	implicit val fooFromToStringShow: Show[Foo] =
+  implicit val fooFromToStringShow: Show[Foo] =
     		Show.showFromToString[Foo]
   
-	println(foo.show)
+  println(foo.show)
 }
           					</code></pre>						
   						<pre class="fragment"><code data-trim class="scala">
@@ -327,80 +328,42 @@ foo
 					<section>
 				<h2>Interludium: what magic worked for Int and String?</h2>
 				<ul>
-					<li>You have obviously noted that neither Int nor String required this special magic of implementing an instance of a Show typeclass
-					<li>We are using <em>type system</em> more extensively to assure our programs are correct
-					<li>We are reducing cognitive load on readers of the code - when they see usage of show, they can be sure that the result is intentional and well defined
-					<li>No surprises at run-time - if show is not defined, code will not compile
-					<li>Scala has built in DI / AOP tooling in the shape of implicit / Typeclasses, that we can leverage here
+					<li class="fragment">Neither Int nor String required implementing an instance of a Show typeclass
+					<li class="fragment">That is because they are already defined
+					<li class="fragment">e.g. for Option most operations are in OptionInstances
+					<li class="fragment">Generally look for SthInstances, SthSyntax and SthOps
+					<li class="fragment">Mechanics in both libraries similar
+					<li class="fragment"><a href="http://typelevel.org/cats/typeclasses.html">Cats manual on Typeclasses</a>
 				</ul>
-				</section>
-				<section>
-					<h2>Library mechanics in Cats</h2>
-					<ul>
-						<li>Syntax - option Syntax
-						<li>Ops - option Ops - .some
-						<li>Show example of none and .some
-						<li>Show for BigInteger, String
-						<li>Instances (use OptionInstances - to show Show)
-						<li><a href="http://typelevel.org/cats/typeclasses.html">Cats manual on Typeclasses</a>
-						<li>ScalaDoc a bit useless, as lots of methods for technical things, internals
-						<li>Mechanics in Scalaz similar (keywords to look for: Instances, Ops, Syntax)
-					</ul>
 				</section>
 				<section>
 				<h2>I have toString everywhere so why bother?</h2>
 				<ul>
-					<li>We are moving some checks from run-time to compile time, there is less risk of unexpected fail on production
-					<li>We are using <em>type system</em> more extensively to assure our programs are correct
-					<li>We are reducing cognitive load on readers of the code - when they see usage of show, they can be sure that the result is intentional and well defined
-					<li>No surprises at run-time - if show is not defined, code will not compile
-					<li>Scala has built in DI / AOP tooling in the shape of implicit / Typeclasses, that we can leverage here
+					<li class="fragment">Moving some checks run-time -&gt; compile time, less risk of unexpected fail when deployed
+					<li class="fragment">We are using <em>type system</em> more extensively to assure our programs are correct
+					<li class="fragment">We are reducing cognitive load on readers of the code - all usages are intentional
+					<li class="fragment">No surprises at run-time - if show is not defined, code will not compile
+					<li class="fragment">Scala has built in DI / AOP tooling in the shape of implicit / Typeclasses, that we can leverage here
 				</ul>
 				</section>
 				<section>
 					<h2>This pattern seems weird...</h2>
 				<ul>
-					<li>Not exactly, this same trick is used by plain vanilla Scala...
-					<li>... in both <a href="http://www.scala-lang.org/api/current/index.html#scala.math.Ordering">Ordering[T]</a>
+					<li class="fragment">Not exactly, this same trick is used by plain vanilla Scala...
+					<li class="fragment">... in both <a href="http://www.scala-lang.org/api/current/index.html#scala.math.Ordering">Ordering[T]</a>
 						and <a href="http://www.scala-lang.org/api/current/index.html#scala.math.Ordered">Ordered[T]</a> typeclasses
-					<li>to convert from Java's Comparator/Comparable interfaces... 
-					<li>And those two typeclasses have implicit conversions between them... cool!
-					<li>And this exact motivation is also present in Java's interfaces... but Java's syntax is more limited
-				</ul>
-				</section>
-				<section>
-				<h2>We can even go a bit further...</h2>
-				<ul>
-						<li>Now a cool thing Cats and Scalaz have in them is the Order typeclass
-						<li>With Cats compare operator returning Int (-1 for less, 0 for equal, 1 for greater)
-  						<pre><code data-trim class="scala">
-import cats.syntax.order._
-object Main extends App {
-	println(1.0 compare 2.0)
-}
-          					</code></pre>						
-  						<pre><code data-trim class="scala">
--1
-          					</code></pre>
-					<li>And Scalaz ?|? operator returning Ordering.LT, Ordering.EQ or Ordering.GE
-  						<pre><code data-trim class="scala">
-import cats.syntax.order._
-object Main extends App {
-	println((1.0 ?|? 2.0).show)
-}
-          					</code></pre>						
-  						<pre><code data-trim class="scala">
-Ordering.LT
-          					</code></pre>
-			
+					<li class="fragment">to convert from Java's Comparator/Comparable interfaces... 
+					<li class="fragment">And those two typeclasses have implicit conversions between them... cool!
+					<li class="fragment">And this exact motivation is also present in Java's interfaces... but Java's syntax is more limited
 				</ul>
 				</section>
           			<section>
 					<h2>Eq</h2>
 					<ul>
-						<li>=== / =!= type aware check for equality / inequality
-						<li>for cats include the import below
-  						<pre><code data-trim class="scala">
+						<li class="fragment">=== / =!= type aware check for equality / inequality
+						<li class="fragment">will cause compile error when types don't match (comparison is impossible)
+						<li class="fragment">for cats include the import below
+  						<pre class="fragment"><code data-trim class="scala">
 import cats.syntax.eq._
           					</code></pre>						
 					</ul>
@@ -408,22 +371,22 @@ import cats.syntax.eq._
           			<section>
 					<h2>Eq</h2>
 					<ul>
-						<li>=== / =!= type aware check for equality / inequality
-						<li>for cats include the import below
-						<li>for Scalaz use =/= instead of =!=
-						<li>don't use /== as it has precedence issues
-  						<pre><code data-trim class="scala">
+						<li class="fragment">for Scalaz no import, use =/= instead of =!=
+						and don't use /== as it has precedence issues
+  						<pre class="fragment"><code data-trim class="scala">
 import cats.syntax.eq._
 object Main extends App {
 
   println("abc" === "cde")
 
   println("abc" =!= "cde")
+//println("abc" =/= "cde")
 
   println(5 === 5)
+//println(5 === "a") // don't
 }
           					</code></pre>						
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
 false
 true
 true
@@ -431,36 +394,13 @@ true
 						</ul>
 				</section>
            			<section>
-					<h2>===</h2>
-					<ul>
-						<li>=== type aware check for equality
-						<li>will cause compile error when types don't match (comparison is impossible)
-  						<pre><code data-trim class="scala">
-import cats.syntax.eq._
-object Main extends App {
-
-  implicit val fooEqInstance: Eq[Foo] =
-    new Eq[Foo] {
-      def eqv(lhs: Foo, rhs: Foo): Boolean = lhs.s === rhs.s
-    }
-
-  println(foo === foo)
-}          					</code></pre>						
-  						<pre><code data-trim class="scala">
-true
-						</code></pre>						
-						</ul>
-				</section>
-           			<section>
 					<h2>=== for Foo in Cats</h2>
 					<ul>
-						<li>You can get an implementation for your own type in Cats
-						<li>by implementing the right instance of Eq typeclass
-						<li>The rest will by done by syntax / ops
-						<li>Please note that the Eq typeclass is in another library, called <a href="https://github.com/non/algebra">algebra</a>
-							which actually is implementing... well... algebra
-						<li>Cats is a really modular library
-  						<pre><code data-trim class="scala">
+						<li class="fragment">by implementing the right instance of Eq typeclass
+						<li class="fragment">The rest will by done by syntax / ops
+						<li class="fragment">Cats is <em>really</em> modular, Eq typeclass is in another library, called <a href="https://github.com/non/algebra">algebra</a>
+							which actually implements... algebra
+  						<pre class="fragment"><code data-trim class="scala">
 import cats.syntax.eq._
 object Main extends App {
 
@@ -471,7 +411,7 @@ object Main extends App {
 
   println(foo === foo)
 }          					</code></pre>						
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
 true
 						</code></pre>						
 						</ul>
@@ -479,21 +419,19 @@ true
 				<section>    
 					<h2>=== for Foo in Scalaz</h2>
 					<ul>
-						<li>You can get an implementation for your own type in Scalaz
-						<li>This time you will implement an instance of TODO tutu XXX typeclass
-						<li>The rest, as usual, will by done by syntax / ops
-  						<pre><code data-trim class="scala">
-import cats.syntax.eq._
+						<li class="fragment">by implementing the right instance of Equal typeclass
+						<li class="fragment">The rest, as usual, will by done by syntax / ops
+  						<pre class="fragment"><code data-trim class="scala">
 object Main extends App {
-
-  implicit val fooEqInstance: Eq[Foo] =
-    new Eq[Foo] {
-      def eqv(lhs: Foo, rhs: Foo): Boolean = lhs.s === rhs.s
+  implicit val fooEqualInstance: Equal[Foo] =
+    new Equal[Foo] {
+      def equal(lhs: Foo, rhs: Foo): Boolean =
+		lhs.s === rhs.s
     }
 
   println(foo === foo)
 }          					</code></pre>						
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
 true
 						</code></pre>						
 						</ul>
