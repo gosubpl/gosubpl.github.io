@@ -123,7 +123,7 @@
 				</section>
 				<section>
 					<h2>What is this?</h2>
-					<img class="bkg" src="Llanharan_Town_Square_2008.jpg" width="700">
+					<img class="bkg" src="Llanharan_Town_Square_2008.jpg" width="500">
 					<p><font size="1">By FruitMonkey Description=Llanharan Town Square, from Bridgend Road facing North. CC BY-SA 3.0</font></p>
 				</section>
 				<section>
@@ -159,6 +159,18 @@
 					</ul>
 				</section>
       				<section>
+					<h2>Scalaz imports</h2>
+					<ul>
+						<li>Scalaz is not modular, just do this
+  						<pre><code data-trim class="scala">
+import scalaz._
+import Scalaz._
+						</code></pre>
+						<li>No need to import anything else
+						<li>Can cause name clashes and general slowness (implicits!)
+					</ul>
+				</section>
+       				<section>
 					<h2>Show</h2>
 					<ul>
 						<li>adding .show to your types (cats)
@@ -225,8 +237,9 @@ object Main extends App {
 }
           					</code></pre>						
   						<pre><code data-trim class="scala">
-ERROR: value show is not a member of com.gft.scala.scalarconf.Foo					
-						</code></pre>						
+ERROR: value show is not a member of
+	com.gft.scala.scalarconf.Foo					
+						</code></pre>					
 					</ul>
 				</section>
       				<section>
@@ -300,7 +313,7 @@ foo
 						<li>Instances (use OptionInstances - to show Show)
 						<li><a href="http://typelevel.org/cats/typeclasses.html">Cats manual on Typeclasses</a>
 						<li>ScalaDoc a bit useless, as lots of methods for technical things, internals
-						<li>Mechanics in Scalaz similar (keywords to look for Instances, Ops, Syntax)
+						<li>Mechanics in Scalaz similar (keywords to look for: Instances, Ops, Syntax)
 					</ul>
 				</section>
 				<section>
