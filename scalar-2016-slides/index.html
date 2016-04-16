@@ -519,10 +519,10 @@ def map[A, B](f: A =&gt; B): F[B]
           			<section>
 					<h2>Functor</h2>
 					<ul>
-						<li>Cats and Scalaz introduce the Functor pattern
-						<li>Everything that has <em>map</em> can be converted to Functor
-						<li>Relevant implicit convertion needs to be introduced
-  						<pre><code data-trim class="scala">
+						<li class="fragment">Cats and Scalaz introduce the Functor pattern
+						<li class="fragment">(Almost) everything that has <em>map</em> can be converted to Functor
+						<li class="fragment">Relevant implicit convertion needs to be introduced
+  						<pre class="fragment"><code data-trim class="scala">
 implicit val optionFunctor: Functor[Option] = 
 new Functor[Option] {
   def map[A,B](fa: Option[A])(f: A =&gt; B) = fa map f
@@ -533,18 +533,24 @@ new Functor[List] {
   def map[A,B](fa: List[A])(f: A =&gt; B) = fa map f
 }
 						</code></pre>
-						<li>In Cats it is done for the Option type in OptionOps
-						<li>In Scalaz - OptionSyntax (Ops &amp; Syntax seem to have inverted meanings)
-						<li>You need the conversion to be in the scope, will not happen by itself
 					</ul>
 				</section>
           			<section>
+					<h2>Functor</h2>
+					<ul>
+						<li class="fragment">In Cats the conversions itself are in OptionOps and ListOps
+						<li class="fragment">In Scalaz - OptionSyntax and ListSyntax (Ops &amp; Syntax seem to have inverted meanings)
+						<li class="fragment">The method <em>map</em> itself is injected in both Scalaz &amp; Cats in OptionInstances and ListInstances
+						<li class="fragment">You need the conversion to be in the scope, will not happen by itself
+					</ul>
+				</section>
+           			<section>
 					<h2>Functor laws</h2>
 					<ul>
-						<li>Functors are very common
-						<li>But not all collections are functors
-						<li>Functor needs to obey FunctorLaws (e.g. cats.laws.FunctorLaws)
-  						<pre><code data-trim class="scala">
+						<li class="fragment">Functors are very common
+						<li class="fragment">But not all collections are functors
+						<li class="fragment">Functor needs to obey FunctorLaws (e.g. cats.laws.FunctorLaws)
+  						<pre class="fragment"><code data-trim class="scala">
   def covariantIdentity[A](fa: F[A]): IsEq[F[A]] =
     fa.map(identity) <-> fa
 
@@ -552,17 +558,17 @@ new Functor[List] {
       (fa: F[A], f: A =&gt; B, g: B =&gt; C): IsEq[F[C]] =
     fa.map(f).map(g) <-> fa.map(f andThen g)						
 						</code></pre>
-						<li>e.g. Set is not a true functor (scalaz.outlaws.std.set._)
-						<li>We call them lawless or outlaws
-						<li>Nonetheless you can use for syntax benefit only if careful
+						<li class="fragment">e.g. Set is not a true functor (scalaz.outlaws.std.set._)
+						<li class="fragment">We call them lawless or outlaws
+						<li class="fragment">Nonetheless you can use implicit just for syntax benefit only if careful
 					</ul>
 				</section>
 				<section>
 					<h2>Using Functors</h2>
 					<ul>
-						<li>You can now separate function from the context
-						<li>And test your function separately from usage
-  						<pre><code data-trim class="scala">
+						<li class="fragment">You can now separate function from the context
+						<li class="fragment">And test your function separately from usage
+  						<pre class="fragment"><code data-trim class="scala">
 def transformWithFunc[F[_], A, B](a: F[A], fa: A =&gt; B)
 	(implicit F: Functor[F]) = F.map(a)(fa)
 
@@ -582,10 +588,10 @@ Some(2)
 				<section>
 					<h2>Composing Functors</h2>
 					<ul>
-						<li>Neat trick about Functors is that you can compose them with |@|
+						<li class="fragment">Neat trick about Functors is that you can compose them with |@|
 							the <em>Scream</em> operator
-						<li>This is Cats code
-  						<pre><code data-trim class="scala">
+						<li class="fragment">This is Cats code
+  						<pre class="fragment"><code data-trim class="scala">
 import cats.syntax.cartesian._
 
 val oa: Option[Int] = Some(3)
@@ -596,7 +602,7 @@ val odx = od.map(_ + _)
 println(odx)
 
 						</code></pre>
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
 Some(8)
 						</code></pre>
 					</ul>
@@ -604,8 +610,8 @@ Some(8)
 				<section>
 					<h2>Composing Functors</h2>
 					<ul>
-						<li>This operator is called a Cartesian (Cats)
-  						<pre><code data-trim class="scala">
+						<li class="fragment">This operator is called a Cartesian in Cats...
+  						<pre class="fragment"><code data-trim class="scala">
 import cats.syntax.cartesian._
 
 val oe = 3.some |@| 5.some
@@ -613,7 +619,7 @@ val oex = od.map(_ + _)
 println(oex)
 
 						</code></pre>
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
 Some(8)
 						</code></pre>
 						</ul>
@@ -621,49 +627,72 @@ Some(8)
 				<section>
 					<h2>Composing Functors</h2>
 					<ul>
-						<li>Apply in Scalaz
-						<li>|@| is called here ApplicativeBuilder
-  						<pre><code data-trim class="scala">
+						<li class="fragment">... and Apply in Scalaz
+						<li class="fragment">|@| is called here ApplicativeBuilder
+						<li class="fragment">note that instead of map we use apply to apply the Apply :)
+  						<pre class="fragment"><code data-trim class="scala">
 import cats.syntax.cartesian._
 
 val oe = 3.some |@| 5.some
-val oex = od.map(_ + _)
+val oex = od.apply(_ + _)
 println(oex)
 
 						</code></pre>
-  						<pre><code data-trim class="scala">
-List(8)
+  						<pre class="fragment"><code data-trim class="scala">
+Some(8)
 						</code></pre>
 						</ul>
+				</section>
+				<section>
+					<h2>Yes, this is a type!</h2>
+					<p class="fragment">Cats</p>
+  					<pre class="fragment"><code data-trim class="scala">
+def buildTwo[F[_], B](a: F[B], b: F[B])
+	(implicit F: Cartesian[F]) = a |@| b
+					</code></pre>
+					<p class="fragment">Scalaz</p>
+  					<pre class="fragment"><code data-trim class="scala">
+def buildTwo[F[_], B](a: F[B], b: F[B])
+	(implicit F: Apply[F]) = a |@| b
+					</code></pre>
 				</section>
 					<section>
 					<h2>Applicative Functor</h2>
 					<ul>
-						<li>Applicative Functor is a Functor that has a constructor
-						<li>This constructor is called <em>pure</em> (or sometimes <em>point</em>)
-  						<pre><code data-trim class="scala">
+						<li class="fragment">Applicative Functor is a Functor that has a constructor
+						<li class="fragment">This constructor is called <em>pure</em> (or sometimes <em>point</em>)
+  					<pre class="fragment"><code data-trim class="scala">
 def pure[A](x: A): F[A]
+						</code></pre>
+  					<pre class="fragment"><code data-trim class="scala">
 
 Applicative[Option].pure(1)
+						</code></pre>
+  					<pre class="fragment"><code data-trim class="scala">
 
 Some(1)
+						</code></pre>
+  					<pre class="fragment"><code data-trim class="scala">
 
 Applicative[List].pure(1)
+						</code></pre>
+  					<pre class="fragment"><code data-trim class="scala">
 
 List(1)
-						</code></pre>
 					</ul>
 				</section>
 				<section>
 				<h2>Using Applicatives</h2>
 					<ul>
-						<li>Notice the catz.* import
-						<li>Cats 0.4.1 does not contain applicatives yet, had to copy by hand from git repository
-						<li>This code works for Scalaz when you replace the import with general Scalaz imports
-  						<pre><code data-trim class="scala">
+						<li class="fragment">Notice the catz.* import
+						<li class="fragment">Cats 0.4.1 does not contain applicatives yet, had to copy by hand from git repository
+						<li class="fragment">This code works for Scalaz when you replace the import with general Scalaz imports
+						<li class="fragment">And map with apply (name Applicative is the same for both libs
+  						<pre class="fragment"><code data-trim class="scala">
 import catz.syntax.applicative._
 
-def sequenceA[F[_]: Applicative, A](list: List[F[A]]): F[List[A]] = list match {
+def sequenceA[F[_]: Applicative, A](list: List[F[A]])
+	: F[List[A]] = list match {
     case Nil =&gt; (Nil: List[A]).pure[F]
     case x :: xs =&gt; (x |@| sequenceA(xs)).map { _ :: _ }
 }
