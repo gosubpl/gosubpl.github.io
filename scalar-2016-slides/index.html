@@ -762,7 +762,7 @@ None
 				<section>
 				<h2>Applicatives Pattern - Configuration</h2>
 					<ul>
-						<li class="fragment">Here comes first nice usage of applicatives
+						<li class="fragment">Here comes first nice usage of applicatives (works both for Scalaz and Cats)
   						<pre class="fragment"><code data-trim class="scala">
 def readProperty(prop: String)(props: List[String]): Option[String] =
 	props.find(_.startsWith(prop + "="))
