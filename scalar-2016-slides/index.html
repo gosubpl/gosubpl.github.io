@@ -798,7 +798,7 @@ None
 				<section>
 				<h2>Applicatives Pattern - Configuration</h2>
 					<ul>
-						<li class="fragment">Or in a simpler way with sequenceA
+						<li class="fragment">Or in a simpler way with sequenceA (remember that one?)
   						<pre class="fragment"><code data-trim class="scala">
 def applyProps(f : Function1[List[String], Option[String]],
 	s: List[String])
@@ -875,14 +875,16 @@ Validation[SuccessType,FailureType] = Succes | Failure
   				<section>
 				<h2>Validation</h2>
 					<ul>
-						<li class="fragment">let's start with Scalaz for a change
+						<li class="fragment">let's start with Scalaz for a change (good old trusty Scalaz...)
   						<pre class="fragment"><code data-trim class="scala">
 def readPropertyV(prop: String)(props: List[String])
 	: Validation[String, String] =
-  props.find(_.startsWith(prop + "=")).map(_.replace(prop + "=", ""))
+  props.find(_.startsWith(prop + "="))
+	.map(_.replace(prop + "=", ""))
   match {
      case None =&gt;
-     	("Property " + prop + " not found in config").failure[String]
+     	("Property " + prop + " not found in config")
+	.failure[String]
      case Some(s) =&gt; s.success[String]
   }
 
@@ -900,7 +902,8 @@ val dbPassV = readPropertyV("db.pass") _
 val propsStringBad = List("db.user=gosubpl", "db.pass=pass")
 val propsStringVeryBad = List("db.user=gosubpl")
 
-def applyPropsV(f: Function1[List[String], Validation[String, String]],
+def applyPropsV(f: Function1[List[String],
+	Validation[String, String]],
 	s: List[String])
 	= f(s)
 
@@ -934,7 +937,8 @@ val dbUserV = readPropertyV("db.user") _
 val dbNameV = readPropertyV("db.name") _
 val dbPassV = readPropertyV("db.pass") _
 
-def applyPropsV(f: Function1[List[String], Validated[String, String]],
+def applyPropsV(f: Function1[List[String],
+	Validated[String, String]],
 	s: List[String])
 	= f(s)
 
