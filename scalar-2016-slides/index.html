@@ -899,7 +899,8 @@ val dbPassV = readPropertyV("db.pass") _
 					<ul>
 						<li class="fragment">Let's run this
   						<pre class="fragment"><code data-trim class="scala">
-val propsStringBad = List("db.user=gosubpl", "db.pass=pass")
+val propsStringBad =
+	List("db.user=gosubpl", "db.pass=pass")
 val propsStringVeryBad = List("db.user=gosubpl")
 
 def applyPropsV(f: Function1[List[String],
@@ -908,10 +909,12 @@ def applyPropsV(f: Function1[List[String],
 	= f(s)
 
 println(List(dbUserV, dbNameV, dbPassV)
-	.map(applyPropsV(_, propsStringBad)).traverseU(identity))
+	.map(applyPropsV(_, propsStringBad))
+	.traverseU(identity))
 
 println(List(dbUserV, dbNameV, dbPassV)
-	.map(applyPropsV(_, propsStringVeryBad)).sequenceU)
+	.map(applyPropsV(_, propsStringVeryBad))
+	.sequenceU)
 						</code></pre>
   						<pre class="fragment"><code data-trim class="scala">
 Failure(Property db.name not found in config)
@@ -931,7 +934,8 @@ def readPropertyV(prop: String)(props: List[String])
     Validated.fromOption(
     	props.find(_.startsWith(prop + "="))
 	.map(_.replace(prop + "=", "")),
-		"Property " + prop + " not found in config")
+		"Property " + prop
+		+ " not found in config")
 
 val dbUserV = readPropertyV("db.user") _
 val dbNameV = readPropertyV("db.name") _
