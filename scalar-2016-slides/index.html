@@ -765,7 +765,8 @@ None
 						<li class="fragment">Here comes first nice usage of applicatives
   						<pre class="fragment"><code data-trim class="scala">
 def readProperty(prop: String)(props: List[String]): Option[String] =
-	props.find(_.startsWith(prop + "=")).map(_.replace(prop + "=", ""))
+	props.find(_.startsWith(prop + "="))
+	.map(_.replace(prop + "=", ""))
 
 val dbUser = readProperty("db.user") _
 val dbName = readProperty("db.name") _
