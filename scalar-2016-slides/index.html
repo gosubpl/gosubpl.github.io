@@ -724,7 +724,7 @@ Some(List(1, a))
 				<section>
 				<h2>Why None?</h2>
 					<ul>
-						<li class="fragment">Think about the addiion example
+						<li class="fragment">Think about the addition example
   						<pre class="fragment"><code data-trim class="scala">
 val on = 1.some |@| none[Int]
 
@@ -744,7 +744,8 @@ None
 						<li class="fragment">Suppose you read a simple props file getting a list of lines
 						<li class="fragment">One configuration is correct, the other is not (<b>it happens</b>)
   						<pre class="fragment"><code data-trim class="scala">
-val propsStringGood=List("db.user=gosubpl", "db.pass=pass", "db.name=dbase1")
+val propsStringGood =
+	List("db.user=gosubpl", "db.pass=pass", "db.name=dbase1")
 val propsStringBad = List("db.user=gosubpl", "db.pass=pass")
 
 println(propsStringGood.find(_.startsWith("db.user="))
@@ -808,19 +809,128 @@ Some(List(gosubpl, dbase1, pass))
 						</code></pre>
 						</ul>
 				</section>
-  				<section>
-				<h2>Validated</h2>
+				<section>
+				<h2>Applicatives Pattern - Traverse</h2>
 					<ul>
-						<li>And if I wanted to know which part of the config failed?
-  						<pre><code data-trim class="scala">
+						<li class="fragment">Fortunately, it is in the library by default
+						<li class="fragment">In the form of sequence and (more generally) traverse
+  						<pre class="fragment"><code data-trim class="scala">
+println(List(dbUser, dbName, dbPass)
+	.map(applyProps(_, propsStringGood)).sequence)
+
+println(List(dbUser, dbName, dbPass)
+	.map(applyProps(_, propsStringGood)).traverse(identity))
+
+println(List(dbUser, dbName, dbPass)
+	.map(applyProps(_, propsStringGood))
+	.traverse(_.map(_.toUpperCase())))
 
 						</code></pre>
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
 Some(List(gosubpl, dbase1, pass))
+Some(List(gosubpl, dbase1, pass))
+Some(List(GOSUBPL, DBASE1, PASS))
 						</code></pre>
 						</ul>
 				</section>
-	<section>
+  				<section>
+				<h2>Validations</h2>
+					<ul>
+						<li class="fragment">And if I wanted to know which part of the config failed?
+  						<pre class="fragment"><code data-trim class="scala">
+val propsStringBad = List("db.user=gosubpl", "db.pass=pass")
+val propsStringVeryBad = List("db.user=gosubpl")
+	
+						</code></pre>
+  						<pre class="fragment"><code data-trim class="scala">
+None
+None						
+						</code></pre>
+						</ul>
+				</section>
+  				<section>
+				<h2>Validated / Validation</h2>
+					<ul>
+						<li class="fragment">You can use the Validated (Cats) or Validation (Scalaz) ADTs
+						<li class="fragment">Not exactly Scala syntax
+						<li class="fragment">Please refer to @rabbitonweb 's presentation
+						<li class="fragment">And #scalarconf 's blog entry on ADTs by GFTs @marcinkowalski
+						<li class="fragment">Cats
+  						<pre class="fragment"><code data-trim class="scala">
+import cats.data.Validated
+
+Validated[SuccessType,FailureType] = Valid | Invalid
+						</code></pre>
+						<li class="fragment">Scalaz
+  						<pre class="fragment"><code data-trim class="scala">
+Validation[SuccessType,FailureType] = Succes | Failure
+						</code></pre>
+						</ul>
+				</section>
+
+  				<section>
+				<h2>Validation</h2>
+					<ul>
+						<li class="fragment">let's start with Scalaz for a change
+  						<pre class="fragment"><code data-trim class="scala">
+def readPropertyV(prop: String)(props: List[String])
+	: Validation[String, String] =
+  props.find(_.startsWith(prop + "=")).map(_.replace(prop + "=", "")) match {
+     case None =&gt;
+     	("Property " + prop + " not found in config").failure[String]
+     case Some(s) =&gt; s.success[String]
+  }
+
+val dbUserV = readPropertyV("db.user") _
+val dbNameV = readPropertyV("db.name") _
+val dbPassV = readPropertyV("db.pass") _
+						</code></pre>
+					</ul>
+				</section>
+				<h2>Validation</h2>
+					<ul>
+						<li class="fragment">Let's run this
+  						<pre class="fragment"><code data-trim class="scala">
+val propsStringBad = List("db.user=gosubpl", "db.pass=pass")
+val propsStringVeryBad = List("db.user=gosubpl")
+
+def applyPropsV(f: Function1[List[String], Validation[String, String]], s: List[String])
+	= f(s)
+
+println(List(dbUserV, dbNameV, dbPassV)
+	.map(applyPropsV(_, propsStringBad)).traverseU(identity))
+
+println(List(dbUserV, dbNameV, dbPassV)
+	.map(applyPropsV(_, propsStringVeryBad)).sequenceU)
+						</code></pre>
+  						<pre class="fragment"><code data-trim class="scala">
+Failure(Property db.name not found in config)
+Failure(Property db.name not found in configProperty db.pass not found in config)
+						</code></pre>
+						</ul>
+				</section>
+  				<section>
+				<h2>Validated</h2>
+					<ul>
+						<li class="fragment">And now Cats
+						<li class="fragment">There is a convenience method fromOption :)
+  						<pre class="fragment"><code data-trim class="scala">
+def readPropertyV(prop: String)(props: List[String]): Validated[String, String] =
+    Validated.fromOption(
+    	props.find(_.startsWith(prop + "="))
+	.map(_.replace(prop + "=", "")), "Property " + prop + " not found in config")
+
+val dbUserV = readPropertyV("db.user") _
+val dbNameV = readPropertyV("db.name") _
+val dbPassV = readPropertyV("db.pass") _
+
+ def applyPropsV(f: Function1[List[String], Validated[String, String]], s: List[String])
+	= f(s)
+
+							</code></pre>
+					</ul>
+				</section>
+				<section>
           <h2>Thank you</h2>
           <h5>Useful links</h5>
           <ul>
