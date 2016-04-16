@@ -764,7 +764,8 @@ None
 					<ul>
 						<li class="fragment">Here comes first nice usage of applicatives (works both for Scalaz and Cats)
   						<pre class="fragment"><code data-trim class="scala">
-def readProperty(prop: String)(props: List[String]): Option[String] =
+def readProperty(prop: String)(props: List[String])
+	: Option[String] =
 	props.find(_.startsWith(prop + "="))
 	.map(_.replace(prop + "=", ""))
 
@@ -799,7 +800,8 @@ None
 					<ul>
 						<li class="fragment">Or in a simpler way with sequenceA
   						<pre class="fragment"><code data-trim class="scala">
-def applyProps(f : Function1[List[String], Option[String]], s: List[String])
+def applyProps(f : Function1[List[String], Option[String]],
+	s: List[String])
 	 = f(s)
 
 println(sequenceA(List(dbUser, dbName, dbPass)
@@ -820,7 +822,8 @@ println(List(dbUser, dbName, dbPass)
 	.map(applyProps(_, propsStringGood)).sequence)
 
 println(List(dbUser, dbName, dbPass)
-	.map(applyProps(_, propsStringGood)).traverse(identity))
+	.map(applyProps(_, propsStringGood))
+	.traverse(identity))
 
 println(List(dbUser, dbName, dbPass)
 	.map(applyProps(_, propsStringGood))
@@ -876,7 +879,8 @@ Validation[SuccessType,FailureType] = Succes | Failure
   						<pre class="fragment"><code data-trim class="scala">
 def readPropertyV(prop: String)(props: List[String])
 	: Validation[String, String] =
-  props.find(_.startsWith(prop + "=")).map(_.replace(prop + "=", "")) match {
+  props.find(_.startsWith(prop + "=")).map(_.replace(prop + "=", ""))
+  match {
      case None =&gt;
      	("Property " + prop + " not found in config").failure[String]
      case Some(s) =&gt; s.success[String]
@@ -896,7 +900,8 @@ val dbPassV = readPropertyV("db.pass") _
 val propsStringBad = List("db.user=gosubpl", "db.pass=pass")
 val propsStringVeryBad = List("db.user=gosubpl")
 
-def applyPropsV(f: Function1[List[String], Validation[String, String]], s: List[String])
+def applyPropsV(f: Function1[List[String], Validation[String, String]],
+	s: List[String])
 	= f(s)
 
 println(List(dbUserV, dbNameV, dbPassV)
@@ -907,7 +912,8 @@ println(List(dbUserV, dbNameV, dbPassV)
 						</code></pre>
   						<pre class="fragment"><code data-trim class="scala">
 Failure(Property db.name not found in config)
-Failure(Property db.name not found in configProperty db.pass not found in config)
+Failure(Property db.name not found in config
+	Property db.pass not found in config)
 						</code></pre>
 						</ul>
 				</section>
@@ -917,16 +923,19 @@ Failure(Property db.name not found in configProperty db.pass not found in config
 						<li class="fragment">And now Cats
 						<li class="fragment">There is a convenience method fromOption :)
   						<pre class="fragment"><code data-trim class="scala">
-def readPropertyV(prop: String)(props: List[String]): Validated[String, String] =
+def readPropertyV(prop: String)(props: List[String])
+	: Validated[String, String] =
     Validated.fromOption(
     	props.find(_.startsWith(prop + "="))
-	.map(_.replace(prop + "=", "")), "Property " + prop + " not found in config")
+	.map(_.replace(prop + "=", "")),
+		"Property " + prop + " not found in config")
 
 val dbUserV = readPropertyV("db.user") _
 val dbNameV = readPropertyV("db.name") _
 val dbPassV = readPropertyV("db.pass") _
 
- def applyPropsV(f: Function1[List[String], Validated[String, String]], s: List[String])
+def applyPropsV(f: Function1[List[String], Validated[String, String]],
+	s: List[String])
 	= f(s)
 
 							</code></pre>
