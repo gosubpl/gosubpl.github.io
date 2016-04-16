@@ -631,8 +631,6 @@ Some(8)
 						<li class="fragment">|@| is called here ApplicativeBuilder
 						<li class="fragment">note that instead of map we use apply to apply the Apply :)
   						<pre class="fragment"><code data-trim class="scala">
-import cats.syntax.cartesian._
-
 val oe = 3.some |@| 5.some
 val oex = od.apply(_ + _)
 println(oex)
@@ -704,9 +702,9 @@ def sequenceA[F[_]: Applicative, A](list: List[F[A]])
 				<section>
 				<h2>Using Applicatives</h2>
 					<ul>
-						<li>Notice what happens when None is encountered
-						<li>Also, commented out line will not compile
-  						<pre><code data-trim class="scala">
+						<li class="fragment">Notice what happens when None is encountered
+						<li class="fragment">Also, commented out line will not compile
+  						<pre class="fragment"><code data-trim class="scala">
 println(sequenceA(List(1.some, 2.some, 3.some)))
 
 println(sequenceA(List(1.some, none[Int], 2.some)))
@@ -716,7 +714,7 @@ println(sequenceA(List(1.some, "a".some)))
 //println(sequenceA(List(1.some, List(2))))
 
 						</code></pre>
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
 Some(List(1, 2, 3))
 None
 Some(List(1, a))
@@ -726,32 +724,35 @@ Some(List(1, a))
 				<section>
 				<h2>Why None?</h2>
 					<ul>
-						<li>Think about the addiion example
-  						<pre><code data-trim class="scala">
+						<li class="fragment">Think about the addiion example
+  						<pre class="fragment"><code data-trim class="scala">
 val on = 1.some |@| none[Int]
 
 println(on.map(_ + _))
 						</code></pre>
-						<li>You cannot add an empty value...
+						<li class="fragment">You cannot add an empty value...
   						<pre><code data-trim class="scala">
 None
 						</code></pre>
-						<li>This makes sense...
+						<li class="fragment">This makes sense...
 						</ul>
 				</section>
 				<section>
 				<h2>Applicatives Pattern - Configuration</h2>
 					<ul>
-						<li>Here comes first nice usage of applicatives
-						<li>Reading a config file
-  						<pre><code data-trim class="scala">
-  val propsStringGood=List("db.user=gosubpl", "db.pass=pass", "db.name=dbase1")
-  val propsStringBad = List("db.user=gosubpl", "db.pass=pass")
+						<li class="fragment">Reading a config file
+						<li class="fragment">Suppose you read a simple props file getting a list of lines
+						<li class="fragment">One configuration is correct, the other is not (<b>it happens</b>)
+  						<pre class="fragment"><code data-trim class="scala">
+val propsStringGood=List("db.user=gosubpl", "db.pass=pass", "db.name=dbase1")
+val propsStringBad = List("db.user=gosubpl", "db.pass=pass")
 
-  println(propsStringGood.find(_.startsWith("db.user=")).map(_.replace("db.user=", "")))
-  println(propsStringBad.find(_.startsWith("db.name=")).map(_.replace("db.name=", "")))
+println(propsStringGood.find(_.startsWith("db.user="))
+	.map(_.replace("db.user=", "")))
+println(propsStringBad.find(_.startsWith("db.name="))
+	.map(_.replace("db.name=", "")))
 						</code></pre>
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
 Some(gosubpl)
 None
 						</code></pre>
@@ -760,8 +761,8 @@ None
 				<section>
 				<h2>Applicatives Pattern - Configuration</h2>
 					<ul>
-						<li>So why not...
-  						<pre><code data-trim class="scala">
+						<li class="fragment">Here comes first nice usage of applicatives
+  						<pre class="fragment"><code data-trim class="scala">
 def readProperty(prop: String)(props: List[String]): Option[String] =
 	props.find(_.startsWith(prop + "=")).map(_.replace(prop + "=", ""))
 
@@ -769,19 +770,23 @@ val dbUser = readProperty("db.user") _
 val dbName = readProperty("db.name") _
 val dbPass = readProperty("db.pass") _
 
-def dbProps(config: List[String]) = (dbUser(config) |@| dbName(config) |@| dbPass(config))
+def dbProps(config: List[String]) =
+	(dbUser(config) |@| dbName(config) |@| dbPass(config))
 						</code></pre>
 						</ul>
 				</section>
 				<section>
 				<h2>Applicatives Pattern - Configuration</h2>
 					<ul>
-						<li>And let's extract the configs
-  						<pre><code data-trim class="scala">
-println(dbProps(propsStringGood).map(_ + " " + _ + " " + _))
-println(dbProps(propsStringBad).map(_ + " " + _ + " " + _))						
+						<li class="fragment">Now let's extract the configs
+  						<pre class="fragment"><code data-trim class="scala">
+// use apply instead of map for Scalaz
+println(dbProps(propsStringGood)
+	.map(_ + " " + _ + " " + _))
+println(dbProps(propsStringBad)
+	.map(_ + " " + _ + " " + _))						
 						</code></pre>
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
 Some(gosubpl dbase1 pass)
 None
 						</code></pre>
@@ -790,13 +795,15 @@ None
 				<section>
 				<h2>Applicatives Pattern - Configuration</h2>
 					<ul>
-						<li>Or in a simpler way with sequenceA
-  						<pre><code data-trim class="scala">
-def applyProps(f : Function1[List[String], Option[String]], s: List[String]) = f(s)
+						<li class="fragment">Or in a simpler way with sequenceA
+  						<pre class="fragment"><code data-trim class="scala">
+def applyProps(f : Function1[List[String], Option[String]], s: List[String])
+	 = f(s)
 
-println(sequenceA(List(dbUser, dbName, dbPass).map(applyProps(_, propsStringGood))))
+println(sequenceA(List(dbUser, dbName, dbPass)
+	.map(applyProps(_, propsStringGood))))
 						</code></pre>
-  						<pre><code data-trim class="scala">
+  						<pre class="fragment"><code data-trim class="scala">
 Some(List(gosubpl, dbase1, pass))
 						</code></pre>
 						</ul>
