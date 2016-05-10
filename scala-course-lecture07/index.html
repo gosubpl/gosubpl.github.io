@@ -234,7 +234,37 @@ equal: not equal
 						</code></pre>
 						</ul>
 				</section>
-					</div>
+        			<section>
+					<h2>The sealed trait pattern</h2>
+					<ul>
+						<li>To guarantee compilator checking for exhaustive match, use the sealed trait patter
+						<li>sealed trait could be replaced with sealed abstract class
+						<li>write a matcher for Expr that would output something like UnOp('+', UnOp('-', 7))
+						<li>try extending with BinOp('/', 7, 5)
+  						<pre><code data-trim class="scala">
+sealed trait Expr
+case class Var(name: String) extends Expr
+case class Num(num: Int) extends Expr
+case class UnOp(op: String, arg: Expr) extends Expr
+						</code></pre>
+						</ul>
+				</section>
+        			<section>
+					<h2>Partial functions and matches on option</h2>
+					<ul>
+						<li>Canonical application of match is to destructure an option in a safe way - to get value or some default value in case option is None
+						<li>Try writing such a match
+						<li>On the other hand, when your match is not exhaustive, your function defined by this match might not behave well for all elements of the domain
+						<li>This is called a PartialFunction. PartialFunction must implement isDefinedAt method
+							<li>Read more on partial functions: <a href="https://twitter.github.io/scala_school/pattern-matching-and-functional-composition.html">Twitter Scala School</a>
+								<a href="http://blog.bruchez.name/2011/10/scala-partial-functions-without-phd.html">Partial fnctions without PhD</a>
+								<li>Read more on <a href="http://danielwestheide.com/blog/2012/12/19/the-neophytes-guide-to-scala-part-5-the-option-type.html">Matching on options</a>,
+									<a href="http://danielwestheide.com/blog/2012/12/12/the-neophytes-guide-to-scala-part-4-pattern-matching-anonymous-functions.html">partial functions</a>,
+									<a href="http://danielwestheide.com/blog/2012/12/05/the-neophytes-guide-to-scala-part-3-patterns-everywhere.html">pattern matching in general</a>
+									and <a href="http://danielwestheide.com/blog/2012/11/21/the-neophytes-guide-to-scala-part-1-extractors.html">mechanics of case classes</a>
+						</ul>
+				</section>
+						</div>
 
 		</div>
 
