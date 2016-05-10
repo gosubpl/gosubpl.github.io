@@ -64,6 +64,7 @@ object Zajecia07 extends App {
 					<h2>Matching values</h2>
 					<ul>
 						<li>Simplest kind of match is to match values
+						<li>Underscore here means "match anything", is a wildcard
   						<pre><code data-trim class="scala">
   def matchAnyValue(x: Any): String = {
     x match {
@@ -93,7 +94,147 @@ match: something else
 						</code></pre>
 						</ul>
 				</section>
-		</div>
+          			<section>
+					<h2>Matching types</h2>
+					<ul>
+						<li>You can also match on types in Scala
+						<li>This is a better version of <em>isInstanceOf</em>
+						<li>A match can also be given a name (n, s, somethingElse), that we can use later
+  						<pre><code data-trim class="scala">
+  def matchAnyType(x: Any): String = {
+    x match {
+      case n: Number =&gt; "a number " + n.toString // but Number(_) won't work!
+      case s: String =&gt; "string" // but String(_) won't work!
+      case somethingElse =&gt; "something else"
+    }
+  }						
+						</code></pre>
+						</ul>
+				</section>
+           			<section>
+					<h2>Matching types - results</h2>
+					<ul>
+						<li>Matching on types works with inheritance quite well
+						<li>Note that 5 is an Int, but Int is-a Number
+  						<pre><code data-trim class="scala">
+    val mat5 = z07.matchAnyType(5)
+    println("type: " + mat5)
+
+    val matAAA = z07.matchAnyType("AAA")
+    println("type: " + matAAA)						
+						</code></pre>
+  						<pre><code data-trim class="scala">
+type: a number 5
+type: string
+						</code></pre>
+						</ul>
+				</section>
+          			<section>
+					<h2>Matching structure</h2>
+					<ul>
+						<li>In Scala matchers are even more powerful
+						<li>The <em>unapply</em> method lets us construct matchers that work by matching the structure of an object
+						<li>It is a very powerful approach, called in Common Lisp <em>destructuring-bind</em>
+  						<pre><code data-trim class="scala">
+  def matchConstructors(x: Any): String = {
+    x match { // first match wins - order matters
+      case TwoInts(5, 3) =&gt; "two ints - 5, 3"
+      case TwoInts(5, _) =&gt; "two ints - 5 and something"
+      case TwoInts(_, 3) =&gt; "two ints - something and three"
+      case TwoStrings("5", _) =&gt; "two strings - 5 and something"
+      case TwoStrings("5", "3") =&gt; "two strings - 5, 3"
+      case _ =&gt; "something else"
+    }
+  }						
+						</code></pre>
+						</ul>
+				</section>
+           			<section>
+					<h2>Matching structure - results</h2>
+					<ul>
+						<li>Please note that order of matchers is important, first match wins
+  						<pre><code data-trim class="scala">
+    val mat53 = z07.matchConstructors(TwoInts(5, 3))
+    println("two: " + mat53)
+
+    val mat54 = z07.matchConstructors(TwoInts(5, 4))
+    println("two: " + mat54)
+
+    val mats53 = z07.matchConstructors(TwoStrings("5", "3"))
+    println("two: " + mats53)		
+						</code></pre>
+  						<pre><code data-trim class="scala">
+two: two ints - 5, 3
+two: two ints - 5 and something
+two: two strings - 5 and something
+						</code></pre>
+						</ul>
+				</section>
+          			<section>
+					<h2>Naming parts in match</h2>
+					<ul>
+						<li>We can even give a name to a particular subelement in match
+  						<pre><code data-trim class="scala">
+  def extractSecondString(x: TwoStrings): String = {
+    x match {
+      case TwoStrings(_, x @ "3") =&gt; x
+      case TwoStrings(_, x @ _) =&gt; "x other than 3: " + x
+      case _ =&gt; "something else"
+    }
+  }					
+						</code></pre>
+						</ul>
+				</section>
+           			<section>
+					<h2>Naming parts - results</h2>
+					<ul>
+						<li>And use this name later to refer to the matched part
+  						<pre><code data-trim class="scala">
+    val maes53 = z07.extractSecondString(TwoStrings("5", "3"))
+    println("extract: " + maes53)
+
+    val maes54 = z07.extractSecondString(TwoStrings("5", "4"))
+    println("extract: " + maes54)
+						</code></pre>
+  						<pre><code data-trim class="scala">
+extract: 3
+extract: x other than 3: 4
+						</code></pre>
+						</ul>
+				</section>
+          			<section>
+					<h2>Parts of match can be operated on</h2>
+					<ul>
+						<li>You can do some limited number of operations (experiment!) on parts of match
+						<li>This is called <em>match guards</em> and is useful when we want to check elements of match for equality
+  						<pre><code data-trim class="scala">
+  def twoIntsEqual(x: TwoInts): String = {
+    x match {
+      case TwoInts(x, y) if x == y =&gt; "equal"
+      case _ =&gt; "not equal"
+    }
+  }					
+						</code></pre>
+						</ul>
+				</section>
+           			<section>
+					<h2>Match guards - results</h2>
+					<ul>
+						<li>Try thinking why case TwoInts(x, x) might not work...
+  						<pre><code data-trim class="scala">
+    val mae77 = z07.twoIntsEqual(TwoInts(7, 7))
+    println("equal: " + mae77)
+
+    val mae75 = z07.twoIntsEqual(TwoInts(7, 5))
+    println("equal: " + mae75)
+						</code></pre>
+  						<pre><code data-trim class="scala">
+equal: equal
+equal: not equal
+						</code></pre>
+						</ul>
+				</section>
+					</div>
 
 		</div>
 
