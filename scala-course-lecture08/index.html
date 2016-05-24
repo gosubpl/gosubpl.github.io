@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js – The HTML Presentation Framework</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/league.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Programming in Scala</h1>
+					<h3>Lecture 08</h3>
+					<p>
+						<small>Marcin Kowalski / Jan Pustelnik</small>
+					</p>
+				</section>
+           			<section>
+					<h2>Zajecia08.scala</h2>
+					<ul>
+						<li>get the file <a href="https://github.com/gosubpl/gosubpl.github.io/blob/master/scala-course-lecture08/Zajecia08.scala">here</a>
+  						<pre><code data-trim class="scala">
+object Zajecia08 extends App {
+  override def main(args: Array[String]): Unit = {
+    val z08 = new Zajecia08()
+  }
+}
+						</code></pre>
+						</ul>
+				</section>
+           			<section>
+					<h2>Lists of values</h2>
+					<ul>
+						<li>You can have lists of various types, list of strings, of ints, etc. you can even have a list of any (but beware!)
+						<li>Lists are covariant, if T &lt; S then List[T] &lt; List[S]
+						<li>List operations are important, iteration over collections is like iteration over lists when a collection has some order of traversal defined
+  						<pre><code data-trim class="scala">
+val ls: List[String] = List("apples", "oranges", "tomatoes")
+val li: List[Int] = List(1, 2, 3)
+val la: List[Any] = List(1, "apples")
+
+ls foreach println
+val ls2 = "apples" :: "oranges" :: Nil
+ls2 map println						
+						</code></pre>
+						</ul>
+				</section>
+           			<section>
+					<h2>Matching on lists</h2>
+					<ul>
+						<li>We can pattern match on lists
+  						<pre><code data-trim class="scala">
+class Zajecia08 {
+  def traverseList[T](x: List[T]): Unit = {
+    x match {
+      case Nil =&gt;
+      case a :: atail =&gt; { println(a); traverseList(atail) }
+    }
+  }
+}
+object Zajecia08 {
+ val z08 = new Zajecia08()
+ z08.traverseList(ls2)
+}
+						</code></pre>
+  						<pre><code data-trim class="scala">
+apples
+oranges
+						</code></pre>
+						</ul>
+				</section>
+          			<section>
+					<h2>Matching types</h2>
+					<ul>
+						<li>You can also match on types in Scala
+						<li>This is a better version of <em>isInstanceOf</em>
+						<li>A match can also be given a name (n, s, somethingElse), that we can use later
+  						<pre><code data-trim class="scala">
+  def matchAnyType(x: Any): String = {
+    x match {
+      case n: Number =&gt; "a number " + n.toString // but Number(_) won't work!
+      case s: String =&gt; "string" // but String(_) won't work!
+      case somethingElse =&gt; "something else"
+    }
+  }						
+						</code></pre>
+						</ul>
+				</section>
+           			<section>
+					<h2>Matching types - results</h2>
+					<ul>
+						<li>Matching on types works with inheritance quite well
+						<li>Note that 5 is an Int, but Int is-a Number
+  						<pre><code data-trim class="scala">
+    val mat5 = z07.matchAnyType(5)
+    println("type: " + mat5)
+
+    val matAAA = z07.matchAnyType("AAA")
+    println("type: " + matAAA)						
+						</code></pre>
+  						<pre><code data-trim class="scala">
+type: a number 5
+type: string
+						</code></pre>
+						</ul>
+				</section>
+          			<section>
+					<h2>Matching structure</h2>
+					<ul>
+						<li>In Scala matchers are even more powerful
+						<li>The <em>unapply</em> method lets us construct matchers that work by matching the structure of an object
+						<li>It is a very powerful approach, called in Common Lisp <em>destructuring-bind</em>
+  						<pre><code data-trim class="scala">
+  def matchConstructors(x: Any): String = {
+    x match { // first match wins - order matters
+      case TwoInts(5, 3) =&gt; "two ints - 5, 3"
+      case TwoInts(5, _) =&gt; "two ints - 5 and something"
+      case TwoInts(_, 3) =&gt; "two ints - something and three"
+      case TwoStrings("5", _) =&gt; "two strings - 5 and something"
+      case TwoStrings("5", "3") =&gt; "two strings - 5, 3"
+      case _ =&gt; "something else"
+    }
+  }						
+						</code></pre>
+						</ul>
+				</section>
+           			<section>
+					<h2>Matching structure - results</h2>
+					<ul>
+						<li>Please note that order of matchers is important, first match wins
+  						<pre><code data-trim class="scala">
+    val mat53 = z07.matchConstructors(TwoInts(5, 3))
+    println("two: " + mat53)
+
+    val mat54 = z07.matchConstructors(TwoInts(5, 4))
+    println("two: " + mat54)
+
+    val mats53 = z07.matchConstructors(TwoStrings("5", "3"))
+    println("two: " + mats53)		
+						</code></pre>
+  						<pre><code data-trim class="scala">
+two: two ints - 5, 3
+two: two ints - 5 and something
+two: two strings - 5 and something
+						</code></pre>
+						</ul>
+				</section>
+          			<section>
+					<h2>Naming parts in match</h2>
+					<ul>
+						<li>We can even give a name to a particular subelement in match
+  						<pre><code data-trim class="scala">
+  def extractSecondString(x: TwoStrings): String = {
+    x match {
+      case TwoStrings(_, x @ "3") =&gt; x
+      case TwoStrings(_, x @ _) =&gt; "x other than 3: " + x
+      case _ =&gt; "something else"
+    }
+  }					
+						</code></pre>
+						</ul>
+				</section>
+           			<section>
+					<h2>Naming parts - results</h2>
+					<ul>
+						<li>And use this name later to refer to the matched part
+  						<pre><code data-trim class="scala">
+    val maes53 = z07.extractSecondString(TwoStrings("5", "3"))
+    println("extract: " + maes53)
+
+    val maes54 = z07.extractSecondString(TwoStrings("5", "4"))
+    println("extract: " + maes54)
+						</code></pre>
+  						<pre><code data-trim class="scala">
+extract: 3
+extract: x other than 3: 4
+						</code></pre>
+						</ul>
+				</section>
+          			<section>
+					<h2>Parts of match can be operated on</h2>
+					<ul>
+						<li>You can do some limited number of operations (experiment!) on parts of match
+						<li>This is called <em>match guards</em> and is useful when we want to check elements of match for equality
+  						<pre><code data-trim class="scala">
+  def twoIntsEqual(x: TwoInts): String = {
+    x match {
+      case TwoInts(x, y) if x == y =&gt; "equal"
+      case _ =&gt; "not equal"
+    }
+  }					
+						</code></pre>
+						</ul>
+				</section>
+           			<section>
+					<h2>Match guards - results</h2>
+					<ul>
+						<li>Try thinking why case TwoInts(x, x) might not work...
+  						<pre><code data-trim class="scala">
+    val mae77 = z07.twoIntsEqual(TwoInts(7, 7))
+    println("equal: " + mae77)
+
+    val mae75 = z07.twoIntsEqual(TwoInts(7, 5))
+    println("equal: " + mae75)
+						</code></pre>
+  						<pre><code data-trim class="scala">
+equal: equal
+equal: not equal
+						</code></pre>
+						</ul>
+				</section>
+        			<section>
+					<h2>The sealed trait pattern</h2>
+					<ul>
+						<li>To guarantee compilator checking for exhaustive match, use the sealed trait patter
+						<li>sealed trait could be replaced with sealed abstract class
+						<li>write a matcher for Expr that would output something like UnOp('+', UnOp('-', 7))
+						<li>try extending with BinOp('/', 7, 5)
+  						<pre><code data-trim class="scala">
+sealed trait Expr
+case class Var(name: String) extends Expr
+case class Num(num: Int) extends Expr
+case class UnOp(op: String, arg: Expr) extends Expr
+						</code></pre>
+						</ul>
+				</section>
+        			<section>
+					<h2>Partial functions and matches on option</h2>
+					<ul>
+						<li>Canonical application of match is to destructure an option in a safe way - to get value or some default value in case option is None
+						<li>Try writing such a match
+						<li>On the other hand, when your match is not exhaustive, your function defined by this match might not behave well for all elements of the domain
+						<li>This is called a PartialFunction. PartialFunction must implement isDefinedAt method
+							<li>Read more on partial functions: <a href="https://twitter.github.io/scala_school/pattern-matching-and-functional-composition.html">Twitter Scala School</a>
+								<a href="http://blog.bruchez.name/2011/10/scala-partial-functions-without-phd.html">Partial fnctions without PhD</a>
+								<li>Read more on <a href="http://danielwestheide.com/blog/2012/12/19/the-neophytes-guide-to-scala-part-5-the-option-type.html">Matching on options</a>,
+									<a href="http://danielwestheide.com/blog/2012/12/12/the-neophytes-guide-to-scala-part-4-pattern-matching-anonymous-functions.html">partial functions</a>,
+									<a href="http://danielwestheide.com/blog/2012/12/05/the-neophytes-guide-to-scala-part-3-patterns-everywhere.html">pattern matching in general</a>
+									and <a href="http://danielwestheide.com/blog/2012/11/21/the-neophytes-guide-to-scala-part-1-extractors.html">mechanics of case classes</a>
+						</ul>
+				</section>
+						</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
