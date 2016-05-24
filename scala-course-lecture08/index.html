@@ -140,7 +140,49 @@ List((apples,1), (oranges,2), (tomatoes,3))
 						</code></pre>
 						</ul>
 				</section>
-		</div>
+          			<section>
+					<h2>Researching lists</h2>
+					<ul>
+						<li>toString
+						<li>mkString
+						<li>toArray
+  						<pre><code data-trim class="scala">
+println(ls.mkString("|"))						
+						</code></pre>
+  						<pre><code data-trim class="scala">
+apples|oranges|tomatoes					
+						</code></pre>
+						</ul>
+				</section>
+          			<section>
+					<h2>Researching lists</h2>
+					<ul>
+						<li>foldLeft
+						<li>foldRight
+						<li>sum using folds
+						<li>write reverse using one of the folds
+  						<pre><code data-trim class="scala">
+def sum(xs: List[Int]): Int = (0 /: xs) (_ + _)
+						</code></pre>
+						</ul>
+				</section>
+          			<section>
+					<h2>Researching lists</h2>
+					<ul>
+						<li>filter
+						<li>partition
+						<li>find
+						<li>takeWhile
+						<li>dropWhile
+  						<pre><code data-trim class="scala">
+println(li filter (_ &lt; 2))
+						</code></pre>
+  						<pre><code data-trim class="scala">
+List(1)					
+						</code></pre>
+						</ul>
+				</section>
+ 			</div>
 
 		</div>
 
