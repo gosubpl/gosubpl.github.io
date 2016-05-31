@@ -67,6 +67,12 @@ object Zajecia09 extends App {
 						<li>In C++ abstract classes are used to define interfaces
 						<li>In Java abstract classes are a bit underused, as you have Interface to do exactly this, especially as you can inherit from only one class but from many interfaces
 						<li>Actually in Scala Abstract class methods can have implementations, it is only customary not to provide any. However in regular class (non-abstract) all methods have
+					</ul>
+				</section>
+           			<section>
+					<h2>Abstract classes</h2>
+					<ul>
+						<li>Actually in Scala Abstract class methods can have implementations, it is only customary not to provide any. However in regular class (non-abstract) all methods have
 						to have implementation, which is not necessary in abstract class (some methods may be unimplemented)
 						<li>All fields need to be initialised, however
   						<pre><code data-trim class="scala">
@@ -76,114 +82,81 @@ abstract class BaseClass {
   def getX: Int
   def setX(xv: Int) = { x = xv }
 }						</code></pre>
-						</ul>
-				</section>
-           			<section>
-					<h2>Matching on lists</h2>
-					<ul>
-						<li>We can pattern match on lists
-  						<pre><code data-trim class="scala">
-class Zajecia08 {
-  def traverseList[T](x: List[T]): Unit = {
-    x match {
-      case Nil =&gt;
-      case a :: atail =&gt; { println(a); traverseList(atail) }
-    }
-  }
-}
-object Zajecia08 {
- val z08 = new Zajecia08()
- z08.traverseList(ls2)
-}
-						</code></pre>
-  						<pre><code data-trim class="scala">
-apples
-oranges
-						</code></pre>
-						</ul>
-				</section>
-          			<section>
-					<h2>Matching on lists is powerful</h2>
-					<ul>
-						<li>Try writing the list append operator ::: using matches
-  						<pre><code data-trim class="scala">
-// the ::: operator
-// val xys = xs ::: ys
-def append[T](xs: List[T], ys: List[T]): List[T] =
-  xs match {
-    case List() =&gt; ys
-    case x :: xs1 =&gt; xs // fix this
-  }
-}
-						</code></pre>
-						</ul>
-				</section>
-           			<section>
-					<h2>Researching lists</h2>
-					<ul>
-						<li>drop (generalised tail)
-						<li>take (generalised head)
-						<li>splitAt (split into two)
 					</ul>
 				</section>
-          			<section>
-					<h2>Researching lists</h2>
+           			<section>
+					<h2>Abstract classes</h2>
 					<ul>
-						<li>zip
-						<li>unzip
+						<li>If you want to override a method that has implementation, you need override keyword, otherwise it is optional (but please, be consistent with your choice)
+						<li>Abstract class is also visible from Java
   						<pre><code data-trim class="scala">
-println(ls zip li)
-println(List((1, "a"), (2, "b")).unzip)						
-						</code></pre>
-  						<pre><code data-trim class="scala">
-List((apples,1), (oranges,2), (tomatoes,3))
-(List(1, 2),List(a, b))						
-						</code></pre>
-						</ul>
+class DerivClass extends BaseClass {
+  def getX = x
+  override def setX(xv: Int) = { x = xv }
+}						</code></pre>
+					</ul>
 				</section>
-          			<section>
-					<h2>Researching lists</h2>
+           			<section>
+					<h2>Abstract classes</h2>
 					<ul>
-						<li>toString
-						<li>mkString
-						<li>toArray
+						<li>Abstract classes can have constructors
   						<pre><code data-trim class="scala">
-println(ls.mkString("|"))						
+abstract class BaseClassTwo(xv: Int) {
+  var x: Int = xv
+}
+
+class DerivClassTwo(xv: Int) extends BaseClassTwo(xv) {
+}
 						</code></pre>
-  						<pre><code data-trim class="scala">
-apples|oranges|tomatoes					
-						</code></pre>
-						</ul>
+					</ul>
 				</section>
-          			<section>
-					<h2>Researching lists</h2>
+            			<section>
+					<h2>Traits</h2>
 					<ul>
-						<li>foldLeft
-						<li>foldRight
-						<li>sum using folds
-						<li>write reverse using one of the folds
-  						<pre><code data-trim class="scala">
-def sum(xs: List[Int]): Int = (0 /: xs) (_ + _)
-						</code></pre>
-						</ul>
+						<li>Single inheritance is too limiting, since there are many "real life" cases that need multiple inheritance
+						<li>Interfaces are too limiting, as they don't provide implementation
+						<li>Scala solution is to use traits (interfaces with implementation)
+						<li>Traits do not have constructor parameters (and hence fields are usually not initialised)
+					</ul>
 				</section>
-          			<section>
-					<h2>Researching lists</h2>
+	       			<section>
+					<h2>Traits</h2>
 					<ul>
-						<li>filter
-						<li>partition
-						<li>find
-						<li>takeWhile
-						<li>dropWhile
+						<li>Traits do not have constructor parameters (and hence fields are usually not initialised)
+						<li>Fields initialisation is a complex topic - this was discussed during Scalar 2016
   						<pre><code data-trim class="scala">
-println(li filter (_ &lt; 2))
+trait BaseTrait {
+  var x: Int
+  def getX: Int
+  def setX(xv: Int) = {x = xv}
+}
+
+trait OtherTrait extends BaseTrait {
+  def getY = x
+  def setY(yv: Int)
+}
 						</code></pre>
-  						<pre><code data-trim class="scala">
-List(1)					
-						</code></pre>
-						</ul>
+					</ul>
 				</section>
- 			</div>
+	       			<section>
+					<h2>Traits</h2>
+					<ul>
+						<li>Traits do not have constructor parameters (and hence fields are usually not initialised)
+						<li>But usually works as you would think
+  						<pre><code data-trim class="scala">
+class DerivClassTrait(xv: Int) extends OtherTrait {
+  var x: Int = xv
+  def getX = x
+  def setY(yv: Int) = {x = yv}
+}						
+						</code></pre>
+					</ul>
+  						<pre><code data-trim class="scala">
+val dct = new DerivClassTrait(7)
+println(dct.getY) // 7						
+						</code></pre>
+					</section>
+   	   	  			</div>
 
 		</div>
 
