@@ -1,0 +1,1020 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js – The HTML Presentation Framework</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/league.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Cool toolz in Scalaz and Cats toolboxes</h1>
+					<h3>Scalar Conf 2016</h3>
+					<p>
+						<small>Jan Pustelnik / <a href="http://twitter.com/gosubpl">@gosubpl</a></small>
+					</p>
+				</section>
+       				<section>
+					<h2>A word about myself</h2>
+					<ul>
+						<li>Working at GFT Poland as a Programmer, University of Lodz as a Lecturer
+						<li>Education: Mathematician, Computer Programmer, DevOps / Admin
+						<li>Mixed background: C++, C#, Ada, Pascal, Java, Scala, Go(lang), Python, Perl, Bash, Awk, Lisp, ML, Haskell, Visual Basic, R
+					</ul>
+				</section>
+  				<section>
+					<h2>A word about myself</h2>
+					<ul>
+						<li>Varied domain: Numerical Methods, Civil Engineering, Investment Banking, Retail Banking, Compiler Construction
+						<li>Varied experience: Linux networking kernel modules, FreeBSD Jails, Networked embedded devices (x86 and Motorola 68000 assembly), Protocols design
+					</ul>
+				</section>
+					<section>
+						<img class="bkg" src="purity.png" width="700">
+						<p>http://xkcd.com/435/</p>
+					</section>
+      					<section>
+					<h2>Programming?</h2>
+					<ul>
+						<li><a href="http://users.ecs.soton.ac.uk/harnad/Temp/symgro.htm">Grounding problem</a> is the fundamental problem which we are solving in our work
+						<li>Good abstractions are most vital for both
+						<li>Abstractions always <a href="http://www.joelonsoftware.com/articles/LeakyAbstractions.html">leak</a> so we need to adapt them to context
+						<li>Debugging is a very important but underrated skill
+					</ul>
+				</section>
+      	    				<section>
+					<h2>Why Scala</h2>
+					<ul>
+						<li class="fragment">Love Scala because it allows to build bespoke abstractions that fit
+						<li class="fragment">Scala is more like a human language than a programming language
+						<li class="fragment">Growing a DSL up to meet your domain is so natural in Scala
+						<li class="fragment">Right abstractions allow to adapt to changing environment easily
+					</ul>
+				</section>
+      	    				<section>
+					<h2>Why Scala</h2>
+					<ul>
+						<li class="fragment">The code is dense and meaningful
+						<li class="fragment">You can read and understand the entire codebase of a system
+						<li class="fragment">Scala blends seamlessly various paradigms - OO, FP, AOP
+						<li class="fragment">Scala has this "Quality without a name" (you know it when you see it)
+					</ul>
+				</section>
+      					<section>
+					<h2>Living with Scala</h2>
+					<ul>
+						<li class="fragment">Dynamic ecosystem, tools change rapidly (e.g. recent work by @milessabin on an old issue SI-2712)
+						<li class="fragment">Libraries change (Slick 2 to Slick 3, Scalaz &amp; Cats)
+						<li class="fragment">Right abstractions, so easy in Scala, help (e.g. withTransaction taking a code block, tuned to your needs)
+						<li class="fragment">Vibrant, helpful community (e.g. typelevel/cats gitter channel, thanks @mpilquist for your help)
+					</ul>
+				</section>
+      				<section>
+					<h2>Chisels, anyone?</h2>
+					<ul>
+						<img class="bkg" src="Carving_tools_2.jpg" width="700">
+						<p><font size="1">By Aerolin55 - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=8266918</font></p>
+					</ul>
+				</section>
+       				<section>
+					<h2>Are you serious?</h2>
+					<ul>
+						<li><a href="https://en.wikipedia.org/wiki/Dunning%E2%80%93Kruger_effect">Dunning-Kruger effect</a>
+						<li>Scala is a tool for professionals
+					</ul>
+				</section>
+        			<section>
+					<h2>What is this?</h2>
+					<img class="bkg" src="1024px-Warsaw,_Old_Town_Square_(6467845903).jpg" width = "700">
+					<p><font size="1">By Arian Zwegers (Warsaw, Old Town Square) [CC BY 2.0 (http://creativecommons.org/licenses/by/2.0)], via Wikimedia Commons</font></p>
+				</section>
+	 			<section>
+					<h2>What is this?</h2>
+					<img class="bkg" src="1024px-Freudenstadt_Town_Square.jpg" width="700">
+					<p><font size="1">By Giramondo1 (Freudenstadt Town Square) [CC BY-SA 2.0 (http://creativecommons.org/licenses/by-sa/2.0)], via Wikimedia Commons</font></p>
+				</section>
+				<section>
+					<h2>What is this?</h2>
+					<img class="bkg" src="Llanharan_Town_Square_2008.jpg" width="500">
+					<p><font size="1">By FruitMonkey Description=Llanharan Town Square, from Bridgend Road facing North. CC BY-SA 3.0</font></p>
+				</section>
+				<section>
+					<h2>Hmm... a town/city square ...</h2>
+					<p>Do you see a PATTERN there?</p>
+				</section>
+      				<section>
+					<h2>Design Patterns</h2>
+					<ul>
+						<li>Design Patterns are reusable abstractions
+						<li>Coming from architecture (of builings, cities, etc.), not IT
+						<li>Inspired by books on architecture by <a href="https://en.wikipedia.org/wiki/Christopher_Alexander">Christopher Alexander</a>
+					</ul>
+				</section>
+      				<section>
+					<h2>Design Patterns</h2>
+					<ul>
+							<li><a href="https://en.wikipedia.org/wiki/The_Timeless_Way_of_Building">The Timeless Way of Building</a> - "Quality without a name" and "Design pattern" (for architectural design)
+							<li><a href="https://en.wikipedia.org/wiki/A_Pattern_Language">A Pattern Language: Towns, Buildings, Construction</a> - set of 253 architecture patterns that are
+									<cite>stated in such a way that it gives the essential field of relationships needed to solve the problem, but in a very general and abstract way</cite>(pg xiii)
+							<li>listing patterns like Local Town Hall (44) or Small Public Squares (61)
+							<li>Inspired OOPSLA'91, PLoP and the GoF book - read <a href="http://c2.com/cgi/wiki?HistoryOfPatterns">history of Patterns movement in IT</a> if interested
+					</ul>
+				</section>
+       				<section>
+					<h2>Some nice syntax extensions</h2>
+					<p class="fragment">We will approach Cats and Scalaz from the Patterns angle, starting with some nice syntax extensions</p>
+					<ul class="fragment">
+						<li>Show
+						<li>Eq - === <em>and</em> =!= (cats) / =/= (scalaz)
+					</ul>
+					<p class="fragment">There are more nice syntax helpers, e.g. Order, please check the documentation!</p>
+				</section>
+      				<section>
+					<h2>Scalaz imports</h2>
+					<ul>
+						<li class="fragment">Scalaz is not modular, just do this
+  						<pre class="fragment"><code data-trim class="scala">
+import scalaz._
+import Scalaz._
+						</code></pre>
+						<li class="fragment">No need to import anything else
+						<li class="fragment">Can cause name clashes and general slowness (implicits!)
+					</ul>
+				</section>
+       				<section>
+					<h2>Show - Cats imports</h2>
+					<ul>
+						<li class="fragment">Cats is a modular libary
+						<li class="fragment">need this import to add .show to standard types (Cats)
+  						<pre class="fragment"><code data-trim class="scala">
+import cats.syntax.show._
+          					</code></pre>						
+					</ul>
+				</section>
+      				<section>
+					<h2>Show</h2>
+					<ul>
+						<li class="fragment">showing a couple of things
+						<li class="fragment">same code for Cats and Scalaz, modulo the import
+  						<pre class="fragment"><code data-trim class="scala">
+import cats.syntax.show._
+
+object Main extends App {
+
+	println("abc".show)
+
+	println(10.show)
+}
+          					</code></pre>						
+  						<pre class="fragment"><code data-trim class="scala">
+abc
+10						
+						</code></pre>						
+					</ul>
+				</section>
+      				<section>
+					<h2>Show</h2>
+					<ul>
+						<li class="fragment">custom class will toString by default
+						<li class="fragment">the result is not very meaningful
+						<pre class="fragment"><code data-trim class="scala">
+import cats.syntax.show._
+
+class Foo(val s: String) {}
+
+object Main extends App {
+	val foo: Foo = new Foo("foo")
+
+	println(foo)
+}
+          					</code></pre>						
+  						<pre class="fragment"><code data-trim class="scala">
+com.gft.scala.scalarconf.Foo@51d67073						
+						</code></pre>						
+						</ul>
+				</section>
+      				<section>
+					<h2>Show</h2>
+					<ul>
+						<li class="fragment">custom class will not Show by default
+						<li class="fragment">this results in compile time error
+						<pre class="fragment"><code data-trim class="scala">
+import cats.syntax.show._
+
+class Foo(val s: String) {}
+
+object Main extends App {
+	val foo: Foo = new Foo("foo")
+
+	println(foo.show)
+}
+          					</code></pre>						
+  						<pre class="fragment"><code data-trim class="scala">
+ERROR: value show is not a member of
+	com.gft.scala.scalarconf.Foo					
+						</code></pre>					
+					</ul>
+				</section>
+      				<section>
+					<h2>Show - instance</h2>
+					<ul>
+						<li class="fragment">we need to inject show into Foo using the Show typeclass
+						<li class="fragment">in other words - create an instance of this typeclass for a given type
+						<pre class="fragment"><code data-trim class="scala">
+import cats.syntax.show._
+
+class Foo(val s: String) {}
+
+object Main extends App {
+	val foo: Foo = new Foo("foo")
+
+	implicit val fooShow: Show[Foo] =
+ 	new Show[Foo] {
+      		def show(foo: Foo) = foo.s
+    	}
+
+	println(foo.show)
+}
+          					</code></pre>						
+  						<pre class="fragment"><code data-trim class="scala">
+foo
+						</code></pre>						
+						<li class="fragment">same code for Scalaz, minus the import
+					</ul>
+				</section>
+      				<section>
+					<h2>Show</h2>
+					<ul>
+						<li class="fragment">if we have a toString defined in Foo, we can use it with Show
+						<pre class="fragment"><code data-trim class="scala">
+import cats.syntax.show._
+
+class Foo(val s: String) {
+  override def toString = s
+}
+
+object Main extends App {
+	val foo: Foo = new Foo("foo")
+
+	implicit val fooFromToStringShow: Show[Foo] =
+		Show.fromToString[Foo]
+
+	println(foo.show)
+}
+          					</code></pre>						
+  						<pre class="fragment"><code data-trim class="scala">
+foo
+						</code></pre>						
+						<li class="fragment">this code is Cats specific
+					</ul>
+				</section>
+      				<section>
+					<h2>Show</h2>
+					<ul>
+						<li class="fragment">but Scalaz version needs only a minor tweak
+						<li class="fragment">notice <b>two</b> minor differences
+						<pre class="fragment"><code data-trim class="scala">
+class Foo(val s: String) {
+  override def toString = s
+}
+
+object Main extends App {
+  val foo: Foo = new Foo("foo")
+
+  implicit val fooFromToStringShow: Show[Foo] =
+    		Show.showFromToString[Foo]
+  
+  println(foo.show)
+}
+          					</code></pre>						
+  						<pre class="fragment"><code data-trim class="scala">
+foo
+						</code></pre>						
+					</ul>
+				</section>
+					<section>
+				<h2>Interludium: what magic worked for Int and String?</h2>
+				<ul>
+					<li class="fragment">Neither Int nor String required implementing an instance of a Show typeclass
+					<li class="fragment">That is because they are already defined
+					<li class="fragment">e.g. for Option most operations are in OptionInstances
+					<li class="fragment">Generally look for SthInstances, SthSyntax and SthOps
+					<li class="fragment">Mechanics in both libraries similar
+					<li class="fragment"><a href="http://typelevel.org/cats/typeclasses.html">Cats manual on Typeclasses</a>
+				</ul>
+				</section>
+				<section>
+				<h2>I have toString everywhere so why bother?</h2>
+				<ul>
+					<li class="fragment">Moving some checks run-time -&gt; compile time, less risk of unexpected fail when deployed
+					<li class="fragment">We are using <em>type system</em> more extensively to assure our programs are correct
+					<li class="fragment">We are reducing cognitive load on readers of the code - all usages are intentional
+					<li class="fragment">No surprises at run-time - if show is not defined, code will not compile
+					<li class="fragment">Scala has built in DI / AOP tooling in the shape of implicit / Typeclasses, that we can leverage here
+				</ul>
+				</section>
+				<section>
+					<h2>This pattern seems weird...</h2>
+				<ul>
+					<li class="fragment">Not exactly, this same trick is used by plain vanilla Scala...
+					<li class="fragment">... in both <a href="http://www.scala-lang.org/api/current/index.html#scala.math.Ordering">Ordering[T]</a>
+						and <a href="http://www.scala-lang.org/api/current/index.html#scala.math.Ordered">Ordered[T]</a> typeclasses
+					<li class="fragment">to convert from Java's Comparator/Comparable interfaces... 
+					<li class="fragment">And those two typeclasses have implicit conversions between them... cool!
+					<li class="fragment">And this exact motivation is also present in Java's interfaces... but Java's syntax is more limited
+				</ul>
+				</section>
+          			<section>
+					<h2>Eq</h2>
+					<ul>
+						<li class="fragment">=== / =!= type aware check for equality / inequality
+						<li class="fragment">will cause compile error when types don't match (comparison is impossible)
+						<li class="fragment">for cats include the import below
+  						<pre class="fragment"><code data-trim class="scala">
+import cats.syntax.eq._
+          					</code></pre>						
+					</ul>
+				</section>
+          			<section>
+					<h2>Eq</h2>
+					<ul>
+						<li class="fragment">for Scalaz no import, use =/= instead of =!=
+						and don't use /== as it has precedence issues
+  						<pre class="fragment"><code data-trim class="scala">
+import cats.syntax.eq._
+object Main extends App {
+
+  println("abc" === "cde")
+
+  println("abc" =!= "cde")
+//println("abc" =/= "cde")
+
+  println(5 === 5)
+//println(5 === "a") // don't
+}
+          					</code></pre>						
+  						<pre class="fragment"><code data-trim class="scala">
+false
+true
+true
+						</code></pre>						
+						</ul>
+				</section>
+           			<section>
+					<h2>=== for Foo in Cats</h2>
+					<ul>
+						<li class="fragment">by implementing the right instance of Eq typeclass
+						<li class="fragment">The rest will by done by syntax / ops
+						<li class="fragment">Cats is <em>really</em> modular, Eq typeclass is in another library, called <a href="https://github.com/non/algebra">algebra</a>
+							which actually implements... algebra
+  						<pre class="fragment"><code data-trim class="scala">
+import cats.syntax.eq._
+object Main extends App {
+
+  implicit val fooEqInstance: Eq[Foo] =
+    new Eq[Foo] {
+      def eqv(lhs: Foo, rhs: Foo): Boolean = lhs.s === rhs.s
+    }
+
+  println(foo === foo)
+}          					</code></pre>						
+  						<pre class="fragment"><code data-trim class="scala">
+true
+						</code></pre>						
+						</ul>
+				</section>
+				<section>    
+					<h2>=== for Foo in Scalaz</h2>
+					<ul>
+						<li class="fragment">by implementing the right instance of Equal typeclass
+						<li class="fragment">The rest, as usual, will by done by syntax / ops
+  						<pre class="fragment"><code data-trim class="scala">
+object Main extends App {
+  implicit val fooEqualInstance: Equal[Foo] =
+    new Equal[Foo] {
+      def equal(lhs: Foo, rhs: Foo): Boolean =
+		lhs.s === rhs.s
+    }
+
+  println(foo === foo)
+}          					</code></pre>						
+  						<pre class="fragment"><code data-trim class="scala">
+true
+						</code></pre>						
+						</ul>
+				</section>
+           			<section>
+					<h2>Context and Functor</h2>
+					<ul>
+						<li class="fragment">Imagine you would like to separate functions that operate on certain types (like f : A =&gt; B)
+							from the computational context (environment) in which those functions are defined
+						<li class="fragment">Example could be a transformation of numbers into other numbers that you would like to unit test using scalacheck
+						<li class="fragment">But run in distributed environment
+						</ul>
+				</section>
+           			<section>
+					<h2>Context and Functor</h2>
+					<ul>
+						<li class="fragment">So for unit testing your function might be running in a context of a simple list (transforming lists of numbers
+							into lists of numbers)
+						<li class="fragment">but for real execution you would use Stream or Future[List] or List[Future] some other fancy Reactive thingy or 
+							modern Big-Data stuff - Spark RDD 
+						<li class="fragment">Plus you get for free the re-usability of the function code, so much coveted in the OO world
+						</ul>
+				</section>
+           			<section>
+					<h2>Context and Functor</h2>
+					<ul>
+						<li class="fragment">The OO GOF book fans should recognise here the Command pattern
+						<li class="fragment">enhanced with the Function Object pattern approach
+						<li class="fragment">and a bit of an Iterator pattern
+						<li class="fragment">we call this pattern simply <em>Functor</em>
+						</ul>
+				</section>
+            			<section>
+					<h2>The map function</h2>
+						<p class="fragment">Interface satisfying requirements stated above one of the <em>map</em> function</p>
+  						<pre class="fragment"><code data-trim class="scala">
+def map[A, B](f: A =&gt; B): F[B]
+						</code></pre>
+						<p class="fragment">Implementation is every generic collection F that can be parametrised with types A and B as F[A] and F[B]
+						supplied with map function that operates on F[A], takes functions going from A to B and returns
+						F[B], applying f to each
+						element of F[A] and building F[B] from results of this application</p>
+				</section>
+          			<section>
+					<h2>The map function</h2>
+					<ul>
+						<li class="fragment">In Scala standard library there is a suitable <em>map</em> construct defined for <em>TraversableLike</em> trait,
+							which sits near the root of inheritance tree of Scala Collections library
+  						<pre class="fragment"><code data-trim class="scala">
+ def map[B, That](f: A =&gt; B)
+	(implicit bf: CanBuildFrom[Repr, B, That]): That = {
+    def builder = { 
+      val b = bf(repr)
+      b.sizeHint(this)
+      b
+    }
+    val b = builder
+    for (x &lt;- this) b += f(x)
+    b.result
+  }
+						</code></pre>
+					</ul>
+				</section>
+          			<section>
+					<h2>The map function</h2>
+						<p class="fragment">But to actually use this for our custom type, we would have to overcome a couple of obstacles</p>
+							<ul class="fragment">
+								<li>inherit from <em>TraversableLike</em>
+								<li>implement suitable <em>CanBuildFrom</em> for builder
+								<li>think about what is necessary to implement all remaining methods of <em>TraversableLike</em>
+							</ul>	
+				</section>
+             			<section>
+					<h2>Factoring out / abstraction</h2>
+					<p class="fragment">Can we?</p>
+					<ul>
+						<li class="fragment">treat this Context / map thing as a pattern
+						<li class="fragment">factor out only the part connected with the <em>map</em> function
+						<li class="fragment">define in abstract way some laws that this construct should obey to satisfy the
+							"map applies f to each element of F[A] and builds F[B]" without "emulating" the definition
+							using builder, as is the case with <em>TraversableLike.map</em>?
+					</ul>
+					<p class="fragment">YES!</p>
+				</section>
+          			<section>
+					<h2>Functor</h2>
+					<ul>
+						<li class="fragment">Cats and Scalaz introduce the Functor pattern
+						<li class="fragment">(Almost) everything that has <em>map</em> can be converted to Functor
+						<li class="fragment">Relevant implicit convertion needs to be introduced
+  						<pre class="fragment"><code data-trim class="scala">
+implicit val optionFunctor: Functor[Option] = 
+new Functor[Option] {
+  def map[A,B](fa: Option[A])(f: A =&gt; B) = fa map f
+}
+
+implicit val listFunctor: Functor[List] =
+new Functor[List] {
+  def map[A,B](fa: List[A])(f: A =&gt; B) = fa map f
+}
+						</code></pre>
+					</ul>
+				</section>
+          			<section>
+					<h2>Functor</h2>
+					<ul>
+						<li class="fragment">In Cats the conversions itself are in OptionOps and ListOps
+						<li class="fragment">In Scalaz - OptionSyntax and ListSyntax (Ops &amp; Syntax seem to have inverted meanings)
+						<li class="fragment">The method <em>map</em> itself is injected in both Scalaz &amp; Cats in OptionInstances and ListInstances
+						<li class="fragment">You need the conversion to be in the scope, will not happen by itself
+					</ul>
+				</section>
+           			<section>
+					<h2>Functor laws</h2>
+					<ul>
+						<li class="fragment">Functors are very common
+						<li class="fragment">But not all collections are functors
+						<li class="fragment">Functor needs to obey FunctorLaws (e.g. cats.laws.FunctorLaws)
+  						<pre class="fragment"><code data-trim class="scala">
+  def covariantIdentity[A](fa: F[A]): IsEq[F[A]] =
+    fa.map(identity) <-> fa
+
+  def covariantComposition[A, B, C]
+      (fa: F[A], f: A =&gt; B, g: B =&gt; C): IsEq[F[C]] =
+    fa.map(f).map(g) <-> fa.map(f andThen g)						
+						</code></pre>
+						<li class="fragment">e.g. Set is not a true functor (scalaz.outlaws.std.set._)
+						<li class="fragment">We call them lawless or outlaws
+						<li class="fragment">Nonetheless you can use implicit just for syntax benefit only if careful
+					</ul>
+				</section>
+				<section>
+					<h2>Using Functors</h2>
+					<ul>
+						<li class="fragment">You can now separate function from the context
+						<li class="fragment">And test your function separately from usage
+  						<pre class="fragment"><code data-trim class="scala">
+def transformWithFunc[F[_], A, B](a: F[A], fa: A =&gt; B)
+	(implicit F: Functor[F]) = F.map(a)(fa)
+
+def twice(x: Int) = 2 * x
+
+println(transformWithFunc(List(1, 2, 3), twice))
+
+List(2, 4, 6)
+
+println(transformWithFunc(1.some, twice))
+
+Some(2)
+
+						</code></pre>
+					</ul>
+				</section>
+				<section>
+					<h2>Composing Functors</h2>
+					<ul>
+						<li class="fragment">Neat trick about Functors is that you can compose them with |@|
+							the <em>Scream</em> operator
+						<li class="fragment">This is Cats code
+  						<pre class="fragment"><code data-trim class="scala">
+import cats.syntax.cartesian._
+
+val oa: Option[Int] = Some(3)
+val ob: Option[Int] = Some(5)
+
+val od = oa |@| ob
+val odx = od.map(_ + _)
+println(odx)
+
+						</code></pre>
+  						<pre class="fragment"><code data-trim class="scala">
+Some(8)
+						</code></pre>
+					</ul>
+				</section>
+				<section>
+					<h2>Composing Functors</h2>
+					<ul>
+						<li class="fragment">This operator is called a Cartesian in Cats...
+  						<pre class="fragment"><code data-trim class="scala">
+import cats.syntax.cartesian._
+
+val oe = 3.some |@| 5.some
+val oex = od.map(_ + _)
+println(oex)
+
+						</code></pre>
+  						<pre class="fragment"><code data-trim class="scala">
+Some(8)
+						</code></pre>
+						</ul>
+				</section>
+				<section>
+					<h2>Composing Functors</h2>
+					<ul>
+						<li class="fragment">... and Apply in Scalaz
+						<li class="fragment">|@| is called here ApplicativeBuilder
+						<li class="fragment">note that instead of map we use apply to apply the Apply :)
+  						<pre class="fragment"><code data-trim class="scala">
+val oe = 3.some |@| 5.some
+val oex = od.apply(_ + _)
+println(oex)
+
+						</code></pre>
+  						<pre class="fragment"><code data-trim class="scala">
+Some(8)
+						</code></pre>
+						</ul>
+				</section>
+				<section>
+					<h2>Yes, this is a type!</h2>
+					<p class="fragment">Cats</p>
+  					<pre class="fragment"><code data-trim class="scala">
+def buildTwo[F[_], B](a: F[B], b: F[B])
+	(implicit F: Cartesian[F]) = a |@| b
+					</code></pre>
+					<p class="fragment">Scalaz</p>
+  					<pre class="fragment"><code data-trim class="scala">
+def buildTwo[F[_], B](a: F[B], b: F[B])
+	(implicit F: Apply[F]) = a |@| b
+					</code></pre>
+				</section>
+					<section>
+					<h2>Applicative Functor</h2>
+					<ul>
+						<li class="fragment">Applicative Functor is a Functor that has a constructor
+						<li class="fragment">This constructor is called <em>pure</em> (or sometimes <em>point</em>)
+  					<pre class="fragment"><code data-trim class="scala">
+def pure[A](x: A): F[A]
+						</code></pre>
+  					<pre class="fragment"><code data-trim class="scala">
+
+Applicative[Option].pure(1)
+						</code></pre>
+  					<pre class="fragment"><code data-trim class="scala">
+
+Some(1)
+						</code></pre>
+  					<pre class="fragment"><code data-trim class="scala">
+
+Applicative[List].pure(1)
+						</code></pre>
+  					<pre class="fragment"><code data-trim class="scala">
+
+List(1)
+					</code></pre>
+					</ul>
+				</section>
+				<section>
+				<h2>Using Applicatives</h2>
+					<ul>
+						<li class="fragment">Notice the catz.* import
+						<li class="fragment">Cats 0.4.1 does not contain applicatives yet, had to copy by hand from git repository
+						<li class="fragment">This code works for Scalaz when you replace the import with general Scalaz imports
+						<li class="fragment">And map with apply (name Applicative is the same for both libs
+  						<pre class="fragment"><code data-trim class="scala">
+import catz.syntax.applicative._
+
+def sequenceA[F[_]: Applicative, A](list: List[F[A]])
+	: F[List[A]] = list match {
+    case Nil =&gt; (Nil: List[A]).pure[F]
+    case x :: xs =&gt; (x |@| sequenceA(xs)).map { _ :: _ }
+}
+
+						</code></pre>
+						</ul>
+				</section>
+				<section>
+				<h2>Using Applicatives</h2>
+					<ul>
+						<li class="fragment">Notice what happens when None is encountered
+						<li class="fragment">Also, commented out line will not compile
+  						<pre class="fragment"><code data-trim class="scala">
+println(sequenceA(List(1.some, 2.some, 3.some)))
+
+println(sequenceA(List(1.some, none[Int], 2.some)))
+
+println(sequenceA(List(1.some, "a".some)))
+
+//println(sequenceA(List(1.some, List(2))))
+
+						</code></pre>
+  						<pre class="fragment"><code data-trim class="scala">
+Some(List(1, 2, 3))
+None
+Some(List(1, a))
+						</code></pre>
+						</ul>
+				</section>
+				<section>
+				<h2>Why None?</h2>
+					<ul>
+						<li class="fragment">Think about the addition example
+  						<pre class="fragment"><code data-trim class="scala">
+val on = 1.some |@| none[Int]
+
+println(on.map(_ + _))
+						</code></pre>
+						<li class="fragment">You cannot add an empty value...
+  						<pre><code data-trim class="scala">
+None
+						</code></pre>
+						<li class="fragment">This makes sense...
+						</ul>
+				</section>
+				<section>
+				<h2>Applicatives Pattern - Configuration</h2>
+					<ul>
+						<li class="fragment">Reading a config file
+						<li class="fragment">Suppose you read a simple props file getting a list of lines
+						<li class="fragment">One configuration is correct, the other is not (<b>it happens</b>)
+  						<pre class="fragment"><code data-trim class="scala">
+val propsStringGood =
+	List("db.user=gosubpl", "db.pass=pass", "db.name=dbase1")
+val propsStringBad = List("db.user=gosubpl", "db.pass=pass")
+
+println(propsStringGood.find(_.startsWith("db.user="))
+	.map(_.replace("db.user=", "")))
+println(propsStringBad.find(_.startsWith("db.name="))
+	.map(_.replace("db.name=", "")))
+						</code></pre>
+  						<pre class="fragment"><code data-trim class="scala">
+Some(gosubpl)
+None
+						</code></pre>
+						</ul>
+				</section>
+				<section>
+				<h2>Applicatives Pattern - Configuration</h2>
+					<ul>
+						<li class="fragment">Here comes first nice usage of applicatives (works both for Scalaz and Cats)
+  						<pre class="fragment"><code data-trim class="scala">
+def readProperty(prop: String)(props: List[String])
+	: Option[String] =
+	props.find(_.startsWith(prop + "="))
+	.map(_.replace(prop + "=", ""))
+
+val dbUser = readProperty("db.user") _
+val dbName = readProperty("db.name") _
+val dbPass = readProperty("db.pass") _
+
+def dbProps(config: List[String]) =
+	(dbUser(config) |@| dbName(config) |@| dbPass(config))
+						</code></pre>
+						</ul>
+				</section>
+				<section>
+				<h2>Applicatives Pattern - Configuration</h2>
+					<ul>
+						<li class="fragment">Now let's extract the configs (remember about apply for Scalaz)
+  						<pre class="fragment"><code data-trim class="scala">
+// use apply instead of map for Scalaz
+println(dbProps(propsStringGood)
+	.map(_ + " " + _ + " " + _))
+println(dbProps(propsStringBad)
+	.map(_ + " " + _ + " " + _))						
+						</code></pre>
+  						<pre class="fragment"><code data-trim class="scala">
+Some(gosubpl dbase1 pass)
+None
+						</code></pre>
+						</ul>
+				</section>
+				<section>
+				<h2>Applicatives Pattern - Configuration</h2>
+					<ul>
+						<li class="fragment">Or in a simpler way with sequenceA (remember that one?)
+  						<pre class="fragment"><code data-trim class="scala">
+def applyProps(f : Function1[List[String], Option[String]],
+	s: List[String])
+	 = f(s)
+
+println(sequenceA(List(dbUser, dbName, dbPass)
+	.map(applyProps(_, propsStringGood))))
+						</code></pre>
+  						<pre class="fragment"><code data-trim class="scala">
+Some(List(gosubpl, dbase1, pass))
+						</code></pre>
+						</ul>
+				</section>
+				<section>
+				<h2>Applicatives Pattern - Traverse</h2>
+					<ul>
+						<li class="fragment">Fortunately, it is in the library by default
+						<li class="fragment">In the form of sequence and (more generally) traverse
+  						<pre class="fragment"><code data-trim class="scala">
+println(List(dbUser, dbName, dbPass)
+	.map(applyProps(_, propsStringGood)).sequence)
+
+println(List(dbUser, dbName, dbPass)
+	.map(applyProps(_, propsStringGood))
+	.traverse(identity))
+
+println(List(dbUser, dbName, dbPass)
+	.map(applyProps(_, propsStringGood))
+	.traverse(_.map(_.toUpperCase())))
+
+						</code></pre>
+  						<pre class="fragment"><code data-trim class="scala">
+Some(List(gosubpl, dbase1, pass))
+Some(List(gosubpl, dbase1, pass))
+Some(List(GOSUBPL, DBASE1, PASS))
+						</code></pre>
+						</ul>
+				</section>
+  				<section>
+				<h2>Validations</h2>
+					<ul>
+						<li class="fragment">And if I wanted to know which part of the config failed?
+  						<pre class="fragment"><code data-trim class="scala">
+val propsStringBad = List("db.user=gosubpl", "db.pass=pass")
+val propsStringVeryBad = List("db.user=gosubpl")
+	
+						</code></pre>
+  						<pre class="fragment"><code data-trim class="scala">
+None
+None						
+						</code></pre>
+						</ul>
+				</section>
+  				<section>
+				<h2>Validated / Validation</h2>
+					<ul>
+						<li class="fragment">You can use the Validated (Cats) or Validation (Scalaz) ADTs
+						<li class="fragment">Not exactly Scala syntax
+						<li class="fragment">Please refer to @rabbitonweb 's presentation
+						<li class="fragment">And #scalarconf 's blog entry on ADTs by GFTs @marcinkowalski
+						<li class="fragment">Cats
+  						<pre class="fragment"><code data-trim class="scala">
+import cats.data.Validated
+
+Validated[SuccessType,FailureType] = Valid | Invalid
+						</code></pre>
+						<li class="fragment">Scalaz
+  						<pre class="fragment"><code data-trim class="scala">
+Validation[SuccessType,FailureType] = Succes | Failure
+						</code></pre>
+						</ul>
+				</section>
+
+  				<section>
+				<h2>Validation</h2>
+					<ul>
+						<li class="fragment">let's start with Scalaz for a change (good old trusty Scalaz...)
+  						<pre class="fragment"><code data-trim class="scala">
+def readPropertyV(prop: String)(props: List[String])
+	: Validation[String, String] =
+  props.find(_.startsWith(prop + "="))
+	.map(_.replace(prop + "=", ""))
+  match {
+     case None =&gt;
+     	("Property " + prop + " not found in config")
+	.failure[String]
+     case Some(s) =&gt; s.success[String]
+  }
+
+val dbUserV = readPropertyV("db.user") _
+val dbNameV = readPropertyV("db.name") _
+val dbPassV = readPropertyV("db.pass") _
+						</code></pre>
+					</ul>
+				</section>
+				<section>
+				<h2>Validation</h2>
+					<ul>
+						<li class="fragment">Let's run this (this code will serve both for Scalaz and Cats)
+  						<pre class="fragment"><code data-trim class="scala">
+val propsStringBad =
+	List("db.user=gosubpl", "db.pass=pass")
+val propsStringVeryBad = List("db.user=gosubpl")
+
+def applyPropsV(f: Function1[List[String],
+	Validation[String, String]],
+	s: List[String])
+	= f(s)
+
+println(List(dbUserV, dbNameV, dbPassV)
+	.map(applyPropsV(_, propsStringBad))
+	.traverseU(identity))
+
+println(List(dbUserV, dbNameV, dbPassV)
+	.map(applyPropsV(_, propsStringVeryBad))
+	.sequenceU)
+						</code></pre>
+  						<pre class="fragment"><code data-trim class="scala">
+Failure(Property db.name not found in config)
+Failure(Property db.name not found in config
+	Property db.pass not found in config)
+						</code></pre>
+						</ul>
+				</section>
+  				<section>
+				<h2>Validated</h2>
+					<ul>
+						<li class="fragment">And now Cats
+						<li class="fragment">There is a convenience method fromOption :)
+  						<pre class="fragment"><code data-trim class="scala">
+def readPropertyV(prop: String)(props: List[String])
+	: Validated[String, String] =
+    Validated.fromOption(
+    	props.find(_.startsWith(prop + "="))
+	.map(_.replace(prop + "=", "")),
+		"Property " + prop
+		+ " not found in config")
+
+val dbUserV = readPropertyV("db.user") _
+val dbNameV = readPropertyV("db.name") _
+val dbPassV = readPropertyV("db.pass") _
+
+def applyPropsV(f: Function1[List[String],
+	Validated[String, String]],
+	s: List[String])
+	= f(s)
+
+							</code></pre>
+					</ul>
+				</section>
+				<section>
+          <h2>Where to go from here?</h2>
+          <h5>Conference talks!</h5>
+          <ul>
+            <li><a href="https://skillsmatter.com/skillscasts/6095-a-skeptic-s-look-at-scalaz-gateway-drugs-a-practical-exploration">A Sceptic's look at Scalaz</a></li>
+            <li><a href="https://skillsmatter.com/skillscasts/5985-concrete-abstraction-with-scalaz">Concrete abstractions with Scalaz</a></li>
+            <li><a href="https://skillsmatter.com/skillscasts/5837-functional-data-validation">Functional data validation</a></li>
+            <li><a href="https://skillsmatter.com/skillscasts/5843-scalaz-or-how-i-learned-to-stop-worrying-and-love-monads">Scalaz or how I learned to stop worrying and love monads</a></li>
+            <li><a href="https://skillsmatter.com/skillscasts/6834-a-purely-functional-approach-to-building-large-applications">A purely functional approach to building large applications</a></li>
+	  </ul>
+        </section>
+	<section>
+          <h2>Where to go from here?</h2>
+          <h5>Useful links</h5>
+          <ul>
+            <li><a href="http://eed3si9n.com/learning-scalaz/">Learning Scalaz</a></li>
+            <li><a href="http://eed3si9n.com/herding-cats/index.html">Herding Cats</a></li>
+            <li><a href="http://typelevel.org/cats/index.html">Cats docs</a></li>
+            <li><a href="http://underscore.io/blog/posts/2015/06/10/an-introduction-to-cats.htm">Introduction to Cats</a></li>
+            <li><a href="http://stackoverflow.com/questions/29870355/how-does-the-cats-library-in-scala-relate-to-scalaz">Cats vs Scalaz</a></li>
+            <li><a href="http://learnyouahaskell.com/">Learn you a Haskell book</a></li>
+            <li><a href="http://www.infoq.com/presentations/scalaz-introduction">Video: Scalaz for the rest of us</a></li>
+            <li><a href="http://underscore.io/books/advanced-scala">Advanced Scala (recently transitioned from Scalaz to Cats) by Underscore (paid)</a></li>
+	  </ul>
+        </section>
+	<section>
+          <h2>Thank you</h2>
+	  <br/>
+	  <br/>
+	  <br/>
+	  <p>Jan Pustelnik</p>
+            <a href="http://gosubpl.github.io/scalar-2016-slides/">Slides: http://gosubpl.github.io/scalar-2016-slides</a>
+        </section>
+
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
