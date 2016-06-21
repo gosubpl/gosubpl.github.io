@@ -52,7 +52,7 @@
 					<ul>
 						<li>Working at GFT Poland as a Programmer, University of Lodz as a Lecturer
 						<li>Education: Mathematician, Computer Programmer, DevOps / Admin
-						<li>Since very recently - Akka contributor (and you <a href="https://github.com/akka/akka/blob/master/CONTRIBUTING.md">should be helping too!</a>)
+						<li>Various technology &amp; domain background
 					</ul>
 				</section>
       	    			<section>
@@ -60,7 +60,7 @@
 					<ul>
 						<li class="fragment">Scala is more like a human language than a programming language
 						<li class="fragment">Growing a DSL up to meet your domain is so natural in Scala
-						<li class="fragment">Creating abstractions, patterns is very easy in Scala
+						<li class="fragment">Creating abstractions, using patterns is very easy in Scala
 					</ul>
 				</section>
         			<section>
@@ -91,35 +91,49 @@
 					</ul>
 				</section>
        				<section>
-					<h2>Some nice syntax extensions</h2>
-					<p class="fragment">We will approach Cats and Scalaz from the Patterns angle, starting with some nice syntax extensions</p>
-					<ul class="fragment">
-						<li>Show
-						<li>Eq - === <em>and</em> =!= (cats) / =/= (scalaz)
-					</ul>
-					<p class="fragment">There are more nice syntax helpers, e.g. Order, please check the documentation!</p>
+					<h2>Functional Patterns with Scala</h2>
+					<p class="fragment">There are two widely used toolboxes with Functional Patterns for Scala - Scalaz and Cats</p>
+					<p class="fragment">Both libraries contain many practical instances of Typeclasses, Functors and Monads</p>
+					<p class="fragment">We will focus on practical side of those patterns, not theory</p>
 				</section>
       				<section>
-					<h2>Scalaz imports</h2>
+					<h2>Scalaz library imports</h2>
 					<ul>
-						<li class="fragment">Scalaz is not modular, just do this
+						<li class="fragment">For Scalaz it is best to use the following two lines
   						<pre class="fragment"><code data-trim class="scala">
 import scalaz._
 import Scalaz._
 						</code></pre>
 						<li class="fragment">No need to import anything else
 						<li class="fragment">Can cause name clashes and general slowness (implicits!)
+							<li class="fragment">Go to <a href="http://eed3si9n.com/learning-scalaz-day13">day 13 of Learning Scalaz</a>
+								and look <a href="https://github.com/scalaz/scalaz#changes-in-version-7">here</a> for more detailed discussion on how to modularise imports.
 					</ul>
 				</section>
        				<section>
-					<h2>Show - Cats imports</h2>
+					<h2>Cats library imports</h2>
 					<ul>
-						<li class="fragment">Cats is a modular libary
-						<li class="fragment">need this import to add .show to standard types (Cats)
+						<li class="fragment">Cats has much stronger focus on modularity, so the recommended option will be always to use individual imports
+						<li class="fragment">But you can use the following "lump" import:
   						<pre class="fragment"><code data-trim class="scala">
-import cats.syntax.show._
-          					</code></pre>						
+import cats._
+import cats.data._
+import cats.implicits._						</code></pre>
+						<li class="fragment">No need to import anything else
+						<li class="fragment">As with Scalaz, can cause name clashes and general slowness (implicits!)
+							<li class="fragment">Go to <a href="https://github.com/typelevel/cats/blob/master/docs/src/main/tut/faq.md#what-imports-do-i-need">Cats FAQ</a>
+								to see which individual imports are relevant for you
 					</ul>
+				</section>
+     				<section>
+					<h2>Syntax extension patterns</h2>
+					<p class="fragment">For starters, some nice syntax extensions</p>
+					<ul class="fragment">
+						<li>Show
+						<li>Eq - === <em>and</em> =!= (cats) / =/= (scalaz)
+					</ul>
+					<p class="fragment">There are more nice syntax helpers out there, e.g. Order, so please check the documentation!</p>
+					<p class="fragment">This pattern (syntax extension) is also commonly used in other languages, let's see how this can be implemented in Scala!
 				</section>
       				<section>
 					<h2>Show</h2>
@@ -188,7 +202,7 @@ ERROR: value show is not a member of
       				<section>
 					<h2>Show - instance</h2>
 					<ul>
-						<li class="fragment">we need to inject show into Foo using the Show typeclass
+						<li class="fragment">we need to inject show into Foo using the Show <em>typeclass</em>
 						<li class="fragment">in other words - create an instance of this typeclass for a given type
 						<pre class="fragment"><code data-trim class="scala">
 import cats.syntax.show._
