@@ -410,7 +410,7 @@ true
 						<li class="fragment">And there is more to it then what we've seen
 						<li class="fragment">Please refer to excellent talk by @rabbitonweb on Typeclasses or search for Typeclass tutorial on the web
 						<li class="fragment">Typeclass definitions can be a bit verbose, especially with all relevant Ops/Syntax helper objects, if you agree, take a look at the
-							excellent <a href="https://github.com/mpilquist/simulacrum">simulacrum</a> library by @mpilquist	
+							<a href="https://github.com/mpilquist/simulacrum">simulacrum</a> library by @mpilquist	
 						</ul>
 				</section>
             			<section>
@@ -498,7 +498,7 @@ def map[A, B](f: A =&gt; B): F[B]
 					<ul>
 						<li class="fragment">Cats and Scalaz introduce the Functor pattern
 						<li class="fragment">(Almost) everything that has <em>map</em> can be converted to Functor
-						<li class="fragment">Relevant implicit convertion needs to be introduced
+							<li class="fragment">Relevant implicit convertion needs to be introduced (because Functor is a <em>Typeclass</em>)
   						<pre class="fragment"><code data-trim class="scala">
 implicit val optionFunctor: Functor[Option] = 
 new Functor[Option] {
@@ -537,7 +537,7 @@ new Functor[List] {
 						</code></pre>
 						<li class="fragment">e.g. Set is not a true functor (scalaz.outlaws.std.set._)
 						<li class="fragment">We call them lawless or outlaws
-						<li class="fragment">Nonetheless you can use implicit just for syntax benefit only if careful
+						<li class="fragment">Nonetheless you can use implicit just for syntax benefit if only you are careful
 					</ul>
 				</section>
 				<section>
@@ -563,9 +563,35 @@ Some(2)
 					</ul>
 				</section>
 				<section>
-					<h2>Composing Functors</h2>
+					<h2>Applicative Functor</h2>
 					<ul>
-						<li class="fragment">Neat trick about Functors is that you can compose them with |@|
+						<li class="fragment">Applicative Functor is a Functor that has a constructor
+						<li class="fragment">This constructor is called <em>pure</em> (or sometimes <em>point</em>)
+  					<pre class="fragment"><code data-trim class="scala">
+def pure[A](x: A): F[A]
+						</code></pre>
+  					<pre class="fragment"><code data-trim class="scala">
+
+Applicative[Option].pure(1)
+						</code></pre>
+  					<pre class="fragment"><code data-trim class="scala">
+
+Some(1)
+						</code></pre>
+  					<pre class="fragment"><code data-trim class="scala">
+
+Applicative[List].pure(1)
+						</code></pre>
+  					<pre class="fragment"><code data-trim class="scala">
+
+List(1)
+					</code></pre>
+					</ul>
+				</section>
+				<section>
+					<h2>Composing Applicative Functors</h2>
+					<ul>
+						<li class="fragment">Neat trick about Applicative Functors is that you can compose them with |@|
 							the <em>Scream</em> operator
 						<li class="fragment">This is Cats code
   						<pre class="fragment"><code data-trim class="scala">
@@ -585,7 +611,7 @@ Some(8)
 					</ul>
 				</section>
 				<section>
-					<h2>Composing Functors</h2>
+					<h2>Composing Applicative Functors</h2>
 					<ul>
 						<li class="fragment">This operator is called a Cartesian in Cats...
   						<pre class="fragment"><code data-trim class="scala">
@@ -602,7 +628,7 @@ Some(8)
 						</ul>
 				</section>
 				<section>
-					<h2>Composing Functors</h2>
+					<h2>Composing Applicative Functors</h2>
 					<ul>
 						<li class="fragment">... and Apply in Scalaz
 						<li class="fragment">|@| is called here ApplicativeBuilder
@@ -632,32 +658,6 @@ def buildTwo[F[_], B](a: F[B], b: F[B])
 					</code></pre>
 				</section>
 					<section>
-					<h2>Applicative Functor</h2>
-					<ul>
-						<li class="fragment">Applicative Functor is a Functor that has a constructor
-						<li class="fragment">This constructor is called <em>pure</em> (or sometimes <em>point</em>)
-  					<pre class="fragment"><code data-trim class="scala">
-def pure[A](x: A): F[A]
-						</code></pre>
-  					<pre class="fragment"><code data-trim class="scala">
-
-Applicative[Option].pure(1)
-						</code></pre>
-  					<pre class="fragment"><code data-trim class="scala">
-
-Some(1)
-						</code></pre>
-  					<pre class="fragment"><code data-trim class="scala">
-
-Applicative[List].pure(1)
-						</code></pre>
-  					<pre class="fragment"><code data-trim class="scala">
-
-List(1)
-					</code></pre>
-					</ul>
-				</section>
-				<section>
 				<h2>Using Applicatives</h2>
 					<ul>
 						<li class="fragment">Notice the catz.* import
