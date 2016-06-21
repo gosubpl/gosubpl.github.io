@@ -227,6 +227,21 @@ foo
 					</ul>
 				</section>
       				<section>
+					<h2>Show - typeclass</h2>
+					<ul>
+						<li class="fragment">The Show typeclass is just a trait (a generic interface)
+						<pre class="fragment"><code data-trim class="scala">
+trait Show[F]  { self =&gt;
+  def show(f: F): String
+}
+          					</code></pre>						
+						<li class="fragment">One creates an instance of this trait parameterising with concrete type (here Foo)
+						<li class="fragment">for full code please refer <a href="https://github.com/scalaz/scalaz/blob/series/7.3.x/core/src/main/scala/scalaz/Show.scala">there</a>
+							or <a href="https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/Show.scala">there</a>
+						<li class="fragment">Note that Scalaz.Show has actually two functions (show and shows) and Cats' one is defined using the <em>simulacrum</em> library.
+					</ul>
+				</section>
+      				<section>
 					<h2>Show</h2>
 					<ul>
 						<li class="fragment">if we have a toString defined in Foo, we can use it with Show
@@ -256,8 +271,9 @@ foo
 					<h2>Show</h2>
 					<ul>
 						<li class="fragment">but Scalaz version needs only a minor tweak
-						<li class="fragment">notice <b>two</b> minor differences
+						<li class="fragment">notice <b>three</b> minor differences
 						<pre class="fragment"><code data-trim class="scala">
+TODO import
 class Foo(val s: String) {
   override def toString = s
 }
