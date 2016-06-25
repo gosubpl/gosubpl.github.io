@@ -986,11 +986,27 @@ def monadicConfigMFor(props: List[String]) = for {
 println(monadicConfigMFor(propsStringGood))
 	</code></pre>
 	<li class="fragment"> if my type was this time not Option but "right biased Either"...
+				</section>
+            			<section>
+					<h2>Chaining operations</h2>
+					<ul>
+						<li class="fragment">... I could aggregate my successes... and for comprehension could do the job for me...
+						<li class="fragment"> flatMap (props =&gt; RightBiasedEither[List[String]]) : RightBiasedEither[List[String]]
+					<pre class="fragment"><code data-trim class="scala">
+
+def monadicConfigMFor(props: List[String]) = for {
+  validatedUser &lt;- dbUserM(List[String](), props)
+  validatedNameAndUser &lt;- dbNameM(validatedUser, props)
+  validatedNameUserAndPass &lt;- dbPassM(validatedNameAndUser, props)
+} yield validatedNameUserAndPass
+ 
+println(monadicConfigMFor(propsStringGood))
+	</code></pre>
 	<pre class="fragment"><code data-trim class="scala">
 \/-(List(pass, dbase1, gosubpl))
 	</code></pre>
 				</section>
-					
+						
 				<section>
           <h2>Where to go from here?</h2>
           <h5>Conference talks!</h5>
@@ -1022,7 +1038,7 @@ println(monadicConfigMFor(propsStringGood))
 	  <br/>
 	  <br/>
 	  <p>Jan Pustelnik</p>
-            <a href="http://gosubpl.github.io/scalar-2016-slides/">Slides: http://gosubpl.github.io/scalar-2016-slides</a>
+            <a href="http://gosubpl.github.io/scalab-2016-slides/">Slides: http://gosubpl.github.io/scalab-2016-slides</a>
         </section>
 
 
