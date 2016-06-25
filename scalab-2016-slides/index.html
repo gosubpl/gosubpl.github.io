@@ -1011,7 +1011,8 @@ println(monadicConfigMFor(propsStringGood))
 					<ul>
 						<li class="fragment">We just need to defne the dbSomethingM functions... we can do that now...
 					<pre class="fragment"><code data-trim class="scala">
-  def readPropertyM(prop: String)(acc: List[String], props: List[String]): \/[String, List[String]] =
+  def readPropertyM(prop: String)(acc: List[String], props: List[String]):
+        \/[String, List[String]] =
     props.find(_.startsWith(prop + "=")).map(_.replace(prop + "=", "")) match {
       case None =&gt; ("Property " + prop + " not found in config").left
       case Some(s) =&gt; (s :: acc).right[String]
@@ -1023,7 +1024,24 @@ println(monadicConfigMFor(propsStringGood))
   val dbPassM = readPropertyM("db.pass") (_, _)
 	</code></pre>
 				</section>
-				<section>
+            			<section>
+					<h2>And we can use that easily</h2>
+					<ul>
+						<li class="fragment">We can use this function with ease like this...
+					<pre class="fragment"><code data-trim class="scala">
+  println(monadicConfigM(propsStringGood))
+
+  println(monadicConfigM(propsStringBad))
+
+  println(monadicConfigM(propsStringVeryBad)) 
+					</code></pre>
+	<pre class="fragment"><code data-trim class="scala">
+\/-(List(pass, dbase1, gosubpl))
+-\/(Property db.name not found in config)
+-\/(Property db.name not found in config)
+	</code></pre>
+				</section>
+					<section>
           <h2>Where to go from here?</h2>
           <h5>Conference talks!</h5>
           <ul>
