@@ -926,6 +926,29 @@ def applyPropsV(f: Function1[List[String],
 							</code></pre>
 					</ul>
 				</section>
+             			<section>
+					<h2>Chaining operations</h2>
+					<ul>
+					<li class="fragment">This is all nice, but suppose you would rather be able to do the chaining automatically
+					<li class="fragment">You could use a for comprehension for this...
+					<pre class="fragment"><code data-trim class="scala">
+
+  val monadicConfig = for {
+    user &lt;- dbUser
+    name &lt;- dbName
+    pass &lt;- dbPass
+  } yield (user, name, pass)
+
+  println(monadicConfig(propsStringGood))
+  println(monadicConfig(propsStringBad))
+	</code></pre>
+	<li class="fragment"> but this fails a bit...
+	<pre class="fragment"><code data-trim class="scala">
+(Some(gosubpl),Some(dbase1),Some(pass))
+(Some(gosubpl),None,Some(pass))
+	</code></pre>
+				</section>
+				
 				<section>
           <h2>Where to go from here?</h2>
           <h5>Conference talks!</h5>
