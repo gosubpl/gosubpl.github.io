@@ -1006,7 +1006,23 @@ println(monadicConfigMFor(propsStringGood))
 \/-(List(pass, dbase1, gosubpl))
 	</code></pre>
 				</section>
-						
+            			<section>
+					<h2>Chaining operations</h2>
+					<ul>
+						<li class="fragment">We just need to defne the dbSomethingM functions... we can do that now...
+					<pre class="fragment"><code data-trim class="scala">
+  def readPropertyM(prop: String)(acc: List[String], props: List[String]): \/[String, List[String]] =
+    props.find(_.startsWith(prop + "=")).map(_.replace(prop + "=", "")) match {
+      case None =&gt; ("Property " + prop + " not found in config").left
+      case Some(s) =&gt; (s :: acc).right[String]
+    }
+					</code></pre>
+	<pre class="fragment"><code data-trim class="scala">
+  val dbUserM = readPropertyM("db.user") (_, _)
+  val dbNameM = readPropertyM("db.name") (_, _)
+  val dbPassM = readPropertyM("db.pass") (_, _)
+	</code></pre>
+				</section>
 				<section>
           <h2>Where to go from here?</h2>
           <h5>Conference talks!</h5>
